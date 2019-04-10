@@ -31,9 +31,6 @@ def sql_execute(sql):
 # For this example you can select a handler function by
 # uncommenting one of the @app.route decorators.
 
-#@app.route('/')
-def basic_response():
-    return "It works!" #example
 
 # @app.route('/')
 def template_response():
@@ -41,21 +38,28 @@ def template_response():
 
 @app.route('/', methods=['GET', 'POST'])
 def template_response_with_data():
-    sql = "select * from test"
-    result = sql_query(sql)
-    template_data = {}
-    template_data['members'] = result
+    template_data = ""
+    if request.method == 'POST':
+        result = request.form
+        uname = str(result['username'])
+        pswd = str(result['password'])
+        sql = "select uid as id from user where user.username='{uname}' and user.password='{pswd}'".format(uname=uname,pswd=pswd)
+        sql_result = sql_query(sql)
+        if not sql_result:
+            template_data="User not found. Please try again"
+            return render_template('home-w-data.html', template_data = template_data)
+        else:
+            return render_template('user_homepage.html', template_data = uname)
+    else:
+        template_data = ""
+
     return render_template('home-w-data.html', template_data = template_data)
-    # print(request.form)
-    # if "buy-book" in request.form:
-    #     book_id = int(request.form["buy-book"])
-    #     sql = "delete from book where id={book_id}".format(book_id=book_id)
-    #     sql_execute(sql)
-    # template_data = {}
-    # sql = "select id, title from book order by title"
-    # books = sql_query(sql)
-    # template_data['books'] = books
-    # return render_template('home-w-data.html', template_data=template_data)
+
+# @app.route('/login',methods = ['POST','GET'])
+# def login():
+#     if request.method == 'POST':
+#         result = request.form
+#         print(result)
 
 if __name__ == '__main__':
     app.run(**config['app'])

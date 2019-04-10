@@ -14,20 +14,14 @@
         <p>Welcome to Jinormous Jungle, which totally fucking sucks.</p>
         <p>Please login below</p>
 
-        <form>
-          Username: <br>
-          <input type="text" name="username"><br>
-          Password:<br>
-          <input type="text" name="password">
+        <form action = "/" method = "POST">
+          <p>Username: <br>
+          <input type="text" name="username"></p>
+          <p>Password:<br>
+          <input type="text" name="password"></p>
+          <input type = "submit" value = "Login">
+          <input type = "submit" value = "Create Account">
         </form>
-
-        <ul>
-          {% for name in template_data['members'] %}
-          <li>
-            {{ name[0] }}
-
-          </li>
-          {% endfor %}
-        </ul>
+        <p> {{template_data}} </p>
     </body>
 </html>
