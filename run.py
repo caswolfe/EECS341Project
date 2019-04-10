@@ -35,22 +35,27 @@ def sql_execute(sql):
 def basic_response():
     return "It works!" #example
 
-#@app.route('/')
+# @app.route('/')
 def template_response():
-    return render_template('home.html')
+    return render_template('home-w-data.html')
 
 @app.route('/', methods=['GET', 'POST'])
 def template_response_with_data():
-    print(request.form)
-    if "buy-book" in request.form:
-        book_id = int(request.form["buy-book"])
-        sql = "delete from book where id={book_id}".format(book_id=book_id)
-        sql_execute(sql)
+    sql = "select * from test"
+    result = sql_query(sql)
     template_data = {}
-    sql = "select id, title from book order by title"
-    books = sql_query(sql)
-    template_data['books'] = books
-    return render_template('home-w-data.html', template_data=template_data)
+    template_data['members'] = result
+    return render_template('home-w-data.html', template_data = template_data)
+    # print(request.form)
+    # if "buy-book" in request.form:
+    #     book_id = int(request.form["buy-book"])
+    #     sql = "delete from book where id={book_id}".format(book_id=book_id)
+    #     sql_execute(sql)
+    # template_data = {}
+    # sql = "select id, title from book order by title"
+    # books = sql_query(sql)
+    # template_data['books'] = books
+    # return render_template('home-w-data.html', template_data=template_data)
 
 if __name__ == '__main__':
     app.run(**config['app'])
