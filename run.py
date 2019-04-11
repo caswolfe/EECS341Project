@@ -1,5 +1,6 @@
 import configparser
 from flask import Flask, render_template, request, url_for, redirect
+from flask_table import Table, Col
 import mysql.connector
 
 # Read configuration from file.
@@ -36,25 +37,37 @@ def sql_execute(sql):
 def template_response():
     return render_template('home-w-data.html')
 
+@app.route('/create-account')
+def create_account():
+    return render_template('create_account.html')
+
 @app.route('/home')
 def home():
-    return render_template('user_homepage.html')
+    sql = "select distinct product.name, product.price, product.quantity from user,product where user.uid = product.sellerid;"
+    result = sql_query(sql)
+    return render_template('user_homepage.html', template_data = result)
+
 
 @app.route('/', methods=['GET', 'POST'])
 def template_response_with_data():
     template_data = ""
     if request.method == 'POST':
         result = request.form
-        uname = str(result['username'])
-        pswd = str(result['password'])
-        sql = "select uid as id from user where user.username='{uname}' and user.password='{pswd}'".format(uname=uname,pswd=pswd)
-        sql_result = sql_query(sql)
-        if not sql_result:
-            template_data="User not found. Please try again"
-            return render_template('home-w-data.html', template_data = template_data)
-        else:
-            return redirect(url_for('home'))
-            #return render_template('user_homepage.html', template_data = uname)
+        print(result)
+        if "Login" in result:
+            uname = str(result['username'])
+            pswd = str(result['password'])
+            sql = "select uid as id from user where user.username='{uname}' and user.password='{pswd}'".format(uname=uname,pswd=pswd)
+            sql_result = sql_query(sql)
+            if not sql_result:
+                template_data="User not found. Please try again"
+                return render_template('home-w-data.html', template_data = template_data)
+            else:
+                return redirect(url_for('home'))
+                #return render_template('user_homepage.html', template_data = uname)
+        elif "Create_Account" in result:
+            return redirect(url_for('create_account'))
+
     else:
         template_data = ""
 
