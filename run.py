@@ -1,5 +1,5 @@
 import configparser
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, url_for, redirect
 import mysql.connector
 
 # Read configuration from file.
@@ -36,6 +36,10 @@ def sql_execute(sql):
 def template_response():
     return render_template('home-w-data.html')
 
+@app.route('/home')
+def home():
+    return render_template('user_homepage.html')
+
 @app.route('/', methods=['GET', 'POST'])
 def template_response_with_data():
     template_data = ""
@@ -49,7 +53,8 @@ def template_response_with_data():
             template_data="User not found. Please try again"
             return render_template('home-w-data.html', template_data = template_data)
         else:
-            return render_template('user_homepage.html', template_data = uname)
+            return redirect(url_for('home'))
+            #return render_template('user_homepage.html', template_data = uname)
     else:
         template_data = ""
 
