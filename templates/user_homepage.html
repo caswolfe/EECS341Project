@@ -9,6 +9,9 @@
     </head>
     <body>
         <p>Your user homepage</p>
+        <form action = "/shop" method = "POST">
+          <input type = "submit" name = "Shop" value = "Shop">
+        </form>
         <p> Your products on the market</p>
     <table>
       <tr>
@@ -21,8 +24,8 @@
         {% for prod in template_data %}
       <tr>
         <td>{{ prod[0] }} </td>
-        <td>{{ prod[1] }} </td>
-        <td>{{ prod[2] }} </td>
+        <td>{{ prod[0] }} </td>
+        <td>{{ prod[0] }} </td>
         {% endfor %}
     </tr>
     </table>

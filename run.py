@@ -29,24 +29,37 @@ def sql_execute(sql):
     cursor.close()
     db.close()
 
-# For this example you can select a handler function by
-# uncommenting one of the @app.route decorators.
 
 
-# @app.route('/')
-def template_response():
-    return render_template('home-w-data.html')
 
 @app.route('/create-account')
 def create_account():
     return render_template('create_account.html')
 
-@app.route('/home')
+@app.route('/home', methods=['GET', 'POST'])
 def home():
+    if request.method == 'POST':
+        result = request.form
+        if "Shop" in result:
+            return redirect(url_for('shop'))
     sql = "select distinct product.name, product.price, product.quantity from user,product where user.uid = product.sellerid;"
     result = sql_query(sql)
     return render_template('user_homepage.html', template_data = result)
 
+@app.route('/shop', methods=['GET', 'POST'])
+def shop():
+    if "buy" in request.form:
+        #print("button press")
+        id = int(request.form["buy"])
+        return redirect(url_for('purchase'))
+    sql = "select * from product"
+    template_data = sql_query(sql)
+    return render_template('shop.html',template_data = template_data)
+
+
+@app.route('/purchase' ,methods=['GET', 'POST'])
+def purchase(productid=None, buyerid = None):
+    return render_template('purchase.html')
 
 @app.route('/', methods=['GET', 'POST'])
 def template_response_with_data():
@@ -72,12 +85,6 @@ def template_response_with_data():
         template_data = ""
 
     return render_template('home-w-data.html', template_data = template_data)
-
-# @app.route('/login',methods = ['POST','GET'])
-# def login():
-#     if request.method == 'POST':
-#         result = request.form
-#         print(result)
 
 if __name__ == '__main__':
     app.run(**config['app'])

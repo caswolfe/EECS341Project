@@ -1,0 +1,33 @@
+<html>
+    <head>
+      <style>
+      table, th, td {
+        border: 1px solid black;
+        }
+      </style>
+
+    <title>Jinourmous Jungle, the world's shittiest store.</title>
+    </head>
+    <body>
+        <p>Browse Products</p>
+    <table>
+      <tr>
+        <td> <b>Name</b></td>
+        <td> <b>Price (USD)</b></td>
+        <td> <b>Quantity</b></td>
+      </tr>
+      {% for prod in template_data %}
+      <tr>
+        <td>{{ prod[0] }} </td>
+        <td>{{ prod[1] }} </td>
+        <td>{{ prod[2] }} </td>
+        <td>
+        <form action="/shop" method="post">
+        <button name="buy" value="{{prod[0]}}">buy</button>
+        </form>
+      </td>
+        {% endfor %}
+    </tr>
+    </table>
+    </body>
+</html>
