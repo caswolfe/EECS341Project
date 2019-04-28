@@ -1,5 +1,5 @@
 import configparser
-from flask import Flask, render_template, request, url_for, redirect
+from flask import Flask, render_template, request, url_for, redirect, session
 from flask_table import Table, Col
 import mysql.connector
 
@@ -9,6 +9,9 @@ config.read('config.ini')
 
 # Set up application server.
 app = Flask(__name__)
+
+#set up key for session cookies
+app.secret_key = b'Jinormous_jungle'
 
 # Create a function for fetching data from the database.
 def sql_query(sql):
@@ -29,9 +32,6 @@ def sql_execute(sql):
     cursor.close()
     db.close()
 
-
-
-
 @app.route('/create-account')
 def create_account():
     return render_template('create_account.html')
@@ -51,15 +51,30 @@ def shop():
     if "buy" in request.form:
         #print("button press")
         id = int(request.form["buy"])
-        return redirect(url_for('purchase'))
-    sql = "select * from product"
+        print("product id: "+ str(id))
+        return redirect(url_for('purchase',pid = id))
+
+    uname = session['uname']
+    print(uname)
+    sql = "select * from product p, user u where p.sellerid = u.uid and u.username != '{uname}'".format(uname=uname)
     template_data = sql_query(sql)
     return render_template('shop.html',template_data = template_data)
 
 
 @app.route('/purchase' ,methods=['GET', 'POST'])
-def purchase(productid=None, buyerid = None):
-    return render_template('purchase.html')
+def purchase():
+    if request.method == 'POST':
+        #TODO:purchase logic
+
+        return redirect(url_for('shop'))
+
+    pid = request.args.get('pid')
+    print("pid is:" + str(pid))
+    sql = "select p.name, s.name, p.price from product p, user s where p.pid = '{pid}' and s.uid = p.sellerid;".format(pid = str(pid))
+    product_info = sql_query(sql)
+    print("template_data:")
+    print(product_info)
+    return render_template('purchase.html', template_data = product_info)
 
 @app.route('/', methods=['GET', 'POST'])
 def template_response_with_data():
@@ -69,6 +84,7 @@ def template_response_with_data():
         print(result)
         if "Login" in result:
             uname = str(result['username'])
+            session['uname'] = uname
             pswd = str(result['password'])
             sql = "select uid as id from user where user.username='{uname}' and user.password='{pswd}'".format(uname=uname,pswd=pswd)
             sql_result = sql_query(sql)

@@ -3,6 +3,10 @@
         <title>Jinourmous Jungle, the world's shittiest store.</title>
     </head>
     <body>
-      <p> todo </p>
+      <p> Confirm you would like to purchase {{template_data[0][0]}} for {{template_data[0][2]}} dollars from {{template_data[0][1]}}</p>
+      <form action="/purchase" method="post">
+      <button name="Confirm" value="Confirm">Confirm</button>
+      </form>
+
     </body>
 </html>

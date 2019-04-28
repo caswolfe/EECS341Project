@@ -18,9 +18,9 @@
       </tr>
       {% for prod in template_data %}
       <tr>
-        <td>{{ prod[0] }} </td>
-        <td>{{ prod[1] }} </td>
         <td>{{ prod[2] }} </td>
+        <td>{{ prod[3] }} </td>
+        <td>{{ prod[1] }} </td>
         <td>
         <form action="/shop" method="post">
         <button name="buy" value="{{prod[0]}}">buy</button>
