@@ -39,12 +39,12 @@ def sql_execute(sql):
 
 
 #TODO
-@app.route('/create-account')
-def create_account():
+@app.route('/createaccount')
+def createaccount():
     if request.method == 'POST':
         pass #python for do nothing
         #TODO create user in database, verify that user does not already exist
-    return render_template('create_account.html')
+    return render_template('createaccount.html')
 
 
 #the user home. Lists their products, balance, etc
@@ -122,7 +122,7 @@ def template_response_with_data():
             else: #we've got a user that matches username, password
                 return redirect(url_for('home'))
         elif "Create_Account" in result:
-            return redirect(url_for('create_account')) #send us to the homepage
+            return redirect(url_for('createaccount')) #send us to the homepage
     return render_template('home-w-data.html')
 
 
