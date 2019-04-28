@@ -77,9 +77,14 @@ def home():
     #another attribute in the user table? Or some other way?
     result = sql_query(sql)
     ret = []
+    # need to return true if update button is pushed
     for i in result:
-        j = i + (False,)
-        ret.append(j)
+        if i[0] == "shit":
+            j = i + (True,)
+            ret.append(j)
+        else:
+            j = i + (False,)
+            ret.append(j)
 
     print(ret)
     #we can pass data to html by giving something to the template_data arg
