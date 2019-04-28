@@ -105,6 +105,7 @@ def purchase():
 #what you see when you first login
 @app.route('/', methods=['GET', 'POST'])
 def template_response_with_data():
+    template_data = ""
     if request.method == 'POST': #if the user has clicked a button
         result = request.form
         print(result)
@@ -123,7 +124,7 @@ def template_response_with_data():
                 return redirect(url_for('home'))
         elif "Create_Account" in result:
             return redirect(url_for('createaccount')) #send us to the homepage
-    return render_template('home-w-data.html')
+    return render_template('home-w-data.html', template_data = template_data)
 
 
 
