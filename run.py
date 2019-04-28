@@ -49,7 +49,7 @@ def createaccount():
 
         #if query returns empty set, can create account
         if not sql_result:
-
+            print("add the user")
             n_username =    str(result['username'])
             n_password =    str(result['password'])
             n_name =        str(result['name'])
@@ -62,7 +62,10 @@ def createaccount():
         #we've got a user that matches username, can't create account
         else:
             template_data="Username allready in use,pPlease try again"
-            return render_template(url_for('createaccount'), template_data = template_data) #sends us back to the start
+            return render_template('createaccount.html', template_data = template_data) #sends us back to the start
+
+    template_data = ""
+    return render_template('createaccount.html', template_data = template_data)
 
 
 #the user home. Lists their products, balance, etc
@@ -70,6 +73,8 @@ def createaccount():
 def home():
     if request.method == 'POST':
         result = request.form
+        if "sell" in result:
+            return redirect(url_for('sell'))
         if "Shop" in result:
             return redirect(url_for('shop'))
     sql = "select distinct product.name, product.price, product.quantity, product.pid from user,product where user.uid = product.sellerid;"
@@ -109,6 +114,16 @@ def shop():
     #python string.format operates similarily to printf() in C
     template_data = sql_query(sql)
     return render_template('shop.html',template_data = template_data)
+
+
+@app.route('/sell',methods=['GET','POST'])
+def sell():
+    if request.method == 'POST':
+        if 'new_item' in request.form:
+            pass
+
+        return redirect(url_for('sell'))
+    return render_template('sell.html')
 
 
 @app.route('/purchase' ,methods=['GET', 'POST'])
