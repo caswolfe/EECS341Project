@@ -44,7 +44,25 @@ def createaccount():
     if request.method == 'POST':
         pass #python for do nothing
         #TODO create user in database, verify that user does not already exist
-    return render_template('createaccount.html')
+        sql = "select uid as id from user where user.username='{uname}'".format(uname=uname)
+        sql_result = sql_query(sql)
+
+        #if query returns empty set, can create account
+        if not sql_result:
+
+            n_username =    str(result['username'])
+            n_password =    str(result['password'])
+            n_name =        str(result['name'])
+            n_email =       str(result['email'])
+
+            insert_command = "INSERT INTO user (username, password, name, email) VALUES ({uname}, {pswd}, {nm}, {eml})".format(uname=n_username, pswd=n_password, nm=n_name, eml=n_email)
+            #TODO: login
+            return redirect(url_for('home'))
+
+        #we've got a user that matches username, can't create account
+        else:
+            template_data="Username allready in use,pPlease try again"
+            return render_template(url_for('createaccount'), template_data = template_data) #sends us back to the start
 
 
 #the user home. Lists their products, balance, etc
