@@ -91,8 +91,11 @@ def home():
             print(pid,name,price,quant)
             pid = 0
 
+    uname = session['uname']
+    sql = "select u.uid from user u where u.username = '{uname}'".format(uname=uname)
+    uid = sql_query(sql)[0][0]
 
-    sql = "select distinct product.name, product.price, product.quantity, product.pid from user,product where user.uid = product.sellerid;"
+    sql = "select distinct product.name, product.price, product.quantity, product.pid from user,product where user.uid = product.sellerid and user.uid = '{uid}';".format(uid=uid)
     #TODO: we need to add some form of balance or way of keeping track amount spent, gained
     #another attribute in the user table? Or some other way?
     result = sql_query(sql)
@@ -132,7 +135,7 @@ def shop():
     uname = session['uname'] #uses session to get username. Setup on the '/' page
     print(uname)
     #show all products that are not owned by the user
-    sql = "select * from product p, user u where p.sellerid = u.uid and u.username != '{uname}'".format(uname=uname)
+    sql = "select * from product p, user u where p.sellerid = u.uid and u.username <> '{uname}'".format(uname=uname)
     #python string.format operates similarily to printf() in C
     template_data = sql_query(sql)
     return render_template('shop.html',template_data = template_data)
