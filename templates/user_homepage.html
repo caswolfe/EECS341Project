@@ -20,35 +20,36 @@
         <td> <b>Price (USD)</b></td>
         <td> <b>Quantity</b></td>
         <td> </td>
-        <td> <input type="submit" value="Delete" form="delete"> </td>
+        <td> <input type="submit" value="Delete" name="delete" form="delete"> </td>
 
       </tr>
         {% for prod in template_data %}
       <tr>
         {% if prod[4] == True %}
-        <form action="/home">
+        <form action="/home" method = "POST" id="update_row">
           <td> <input type="text" name="name" value="{{ prod[0] }}"> </td>
           <td> <input type="text" name="price" value="{{ prod[1] }}"> </td>
           <td> <input type="text" name="quantity" value="{{ prod[2] }}"> </td>
-          <td> <input type="submit" name="submit" value="Save" id="{{ prod[3] }}"> </td>
+          <input type="hidden" name = "pid" value = "{{ prod[3] }}">
+          <td> <input type="submit" name="submit" value="Submit"> </td>
         </form>
-        <td> </td>
+        <td> <input type="checkbox" name="{{ prod[3] }}" form="delete"> </td>
         {% else %}
           <td>{{ prod[0] }} </td>
           <td>{{ prod[1] }} </td>
           <td>{{ prod[2] }} </td>
           <td>
             <form action="/home" method="post">
-            <button name="update" value="Update" id="{{prod[3]}}">Update</button>
+            <button name="update" value="{{prod[3]}}" id="{{prod[3]}}">Update</button>
             </form>
           </td>
-          <td> <input type="checkbox" name="delete" id="{{ prod[3] }}" form="delete"> </td>
+          <td> <input type="checkbox" name="{{ prod[3] }}" form="delete"> </td>
         {% endif %}
 
         {% endfor %}
     </tr>
     </table>
-  </br>
+  <br>
     <form action = "/sell" method = "POST">
       <input type = "submit" name = "sell" value = "Add Item">
     </form>

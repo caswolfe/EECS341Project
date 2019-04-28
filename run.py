@@ -71,27 +71,49 @@ def createaccount():
 #the user home. Lists their products, balance, etc
 @app.route('/home', methods=['GET', 'POST'])
 def home():
+    pid = 0
     if request.method == 'POST':
         result = request.form
         if "sell" in result:
             return redirect(url_for('sell'))
         if "Shop" in result:
             return redirect(url_for('shop'))
+        if "update" in result:
+            pid = int(request.form['update'])
+            #print(pid)
+        if "submit" in result:
+            pid = int(request.form['pid'])
+            name = str(request.form['name'])
+            price = str(request.form['price'])
+            quant = str(request.form['quantity'])
+            sql = "update product set name ='{name}',price = '{price}',quantity = '{quant}' where pid = '{pid}'".format(name=name,price=price,quant=quant,pid=pid)
+            sql_execute(sql)
+            print(pid,name,price,quant)
+            pid = 0
+
+
     sql = "select distinct product.name, product.price, product.quantity, product.pid from user,product where user.uid = product.sellerid;"
     #TODO: we need to add some form of balance or way of keeping track amount spent, gained
     #another attribute in the user table? Or some other way?
     result = sql_query(sql)
     ret = []
-    # need to return true if update button is pushed
-    for i in result:
-        if i[0] == "shit":
-            j = i + (True,)
-            ret.append(j)
-        else:
-            j = i + (False,)
-            ret.append(j)
+    #need to return true if update button is pushed
+
+    if pid:
+        #print("test")
+        for i in result:
+            if i[3] == pid:
+                j = i + (True,)
+                ret.append(j)
+            else:
+                j = i + (False,)
+                ret.append(j)
+    else:
+        ret = result
 
     print(ret)
+
+
     #we can pass data to html by giving something to the template_data arg
     #from html, we can run embedded python by using {{*embedded python code*}}
     #we can then access whatever data we store in the arguement we passed
@@ -118,12 +140,12 @@ def shop():
 
 @app.route('/sell',methods=['GET','POST'])
 def sell():
+    ret = ""
     if request.method == 'POST':
         if 'new_item' in request.form:
             pass
-
-        return redirect(url_for('sell'))
-    return render_template('sell.html')
+        ret = "ADDED ITEM TO SELL LIST"
+    return render_template('sell.html',template_data = ret)
 
 
 @app.route('/purchase' ,methods=['GET', 'POST'])

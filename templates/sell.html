@@ -5,7 +5,7 @@
     <body>
         <h1>Sell Page</h1>
         <p>Add items that you wish to post for sale</p>
-        <form action = "/home" method = "POST">
+        <form action = "/sell" method = "POST">
           <p>Item Name:<br>
           <input type="text" name="Item Name"></p>
           <p>Price (USD):<br>
@@ -14,5 +14,6 @@
           <input type="text" name="Quantity"></p>
           <input type = "submit" name = "add_item" value = "Sell">
         </form>
+        {{template_data}}
     </body>
 </html>
