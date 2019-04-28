@@ -54,16 +54,21 @@ def home():
         result = request.form
         if "Shop" in result:
             return redirect(url_for('shop'))
-    sql = "select distinct product.name, product.price, product.quantity from user,product where user.uid = product.sellerid;"
+    sql = "select distinct product.name, product.price, product.quantity, product.pid from user,product where user.uid = product.sellerid;"
     #TODO: we need to add some form of balance or way of keeping track amount spent, gained
     #another attribute in the user table? Or some other way?
     result = sql_query(sql)
+    ret = []
+    for i in result:
+        j = i + (False,)
+        ret.append(j)
 
+    print(ret)
     #we can pass data to html by giving something to the template_data arg
     #from html, we can run embedded python by using {{*embedded python code*}}
     #we can then access whatever data we store in the arguement we passed
     #typically, we pass data as a list or dict, which are analogous to vectors/arraylists and hashmaps, respectivily
-    return render_template('user_homepage.html', template_data = result)
+    return render_template('user_homepage.html', template_data = ret)
 
 #the basic shop page
 @app.route('/shop', methods=['GET', 'POST'])
