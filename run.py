@@ -56,7 +56,7 @@ def createaccount():
             n_email =       str(result['email'])
 
             insert_command = "INSERT INTO user (username, password, name, email) VALUES ({uname}, {pswd}, {nm}, {eml})".format(uname=n_username, pswd=n_password, nm=n_name, eml=n_email)
-            #TODO: login
+            sql_execute(insert_command)
             return redirect(url_for('home'))
 
         #we've got a user that matches username, can't create account
@@ -142,9 +142,16 @@ def shop():
 def sell():
     ret = ""
     if request.method == 'POST':
-        if 'new_item' in request.form:
-            pass
-        ret = "ADDED ITEM TO SELL LIST"
+        if 'add_item' in request.form:
+            name = request.form['Item Name']
+            price = request.form['Price(USD)']
+            quantity = request.form['Quantity']
+            uname = session['uname']
+            sql = "select u.uid from user u where u.username = '{uname}'".format(uname=uname)
+            uid = sql_query(sql)[0][0]
+            sql = "insert into product (sellerid,name,price,quantity) values('{uid}','{name}','{price}','{quantity}')".format(uid=uid,name=name,price=price,quantity=quantity)
+            sql_execute(sql)
+            return redirect(url_for('home'))
     return render_template('sell.html',template_data = ret)
 
 
