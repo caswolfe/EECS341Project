@@ -6,21 +6,23 @@ tbody {
 	background-color: white;
 }
 
+a {
+	text-decoration: none;
+}
+
 h1 {
 	color: #AAABB8;
 	font-family: Arial;
 	font-size: 60px;
-	line-height: 100px;
 	text-align: center;
 	vertical-align: middle;
 }
 
-#shop-btn {
-	height: 200px;
-	width: 95vw;
-	background-color: transparent;
+h2 {
 	font-family: Arial;
 	font-size: 60px;
+	text-align: center;
+	vertical-align: middle;
 }
 
 .header {
@@ -41,7 +43,7 @@ h1 {
 	color: #AAABB8; 
 	background-color: #25274D;
 	margin: auto;
-	height: 200px;
+	height: 180px;
 	width: 95vw;
 }
 

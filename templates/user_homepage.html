@@ -1,6 +1,6 @@
 <head>
       <link rel="stylesheet" type="text/css" href="static/css/style.css">
-      <title>Home Page</title>
+      <title>Homepage</title>
     </head>
     <body>
       <div class="header">
@@ -18,12 +18,12 @@
         <h1>Your User Homepage:</h1>
       </div>
 
+      <a href = "/shop" class="shop">
       <div class="shop btn">
-        <form action = "/shop" method = "POST">
-          <input id="shop-btn" class="btn" type = "submit" name = "Shop" value = "Shop">
-        </form>
+        <h2>Shop</h2>
       </div>
-
+      </a>
+    
       <div class="products">
         <p> Your products on the market</p>
         <form action = "/home" method = "POST" id="delete"></form>
@@ -57,7 +57,7 @@
             <td>{{ prod[2] }} </td>
             <td>
               <form action="/home" method="post">
-                <button name="update" value="{{prod[3]}}" id="{{prod[3]}}">Update</button>
+                <button name="update" value="{{ prod[3] }}" id="{{ prod[3] }}">Update</button>
               </form>
             </td>
             <td> <input type="checkbox" name="check" value = "{{ prod[3] }}"form="delete"> </td>
