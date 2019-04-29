@@ -1,13 +1,20 @@
 <html>
     <head>
-      <style>
-      table, th, td {
-        border: 1px solid black;
-        }
-      </style>
+      <link rel="stylesheet" type="text/css" href="static/css/style.css">
       <title>Jinourmous Jungle, the world's shittiest store.</title>
     </head>
     <body>
+      <div class="header">
+        <pre>
+          __  _                                                     __                    _
+          \ \(_)_ __   ___  _   _ _ __ _ __ ___   ___  _   _ ___    \ \ _   _ _ __   __ _| | ___
+           \ \ | '_ \ / _ \| | | | '__| '_ ` _ \ / _ \| | | / __|    \ \ | | | '_ \ / _` | |/ _ \
+        /\_/ / | | | | (_) | |_| | |  | | | | | | (_) | |_| \__ \ /\_/ / |_| | | | | (_| | |  __/
+        \___/|_|_| |_|\___/ \__,_|_|  |_| |_| |_|\___/ \__,_|___/ \___/ \__,_|_| |_|\__, |_|\___|
+                                                                                    |___/
+        </pre>
+      </div>
+      
       <h1>Marketplace</h1>
       <p>The items below are for sale</p>
       <table>
@@ -19,17 +26,18 @@
         </tr>
         {% for prod in template_data %}
         <tr>
-            <td>{{ prod[2] }} </td>
-            <td>{{ prod[3] }} </td>
+          <td>{{ prod[2] }} </td>
+          <td>{{ prod[3] }} </td>
+            
+          <form action="/shop" method="POST">
             <td>
-              <form action="/shop" method="POST">
               <input type="number" value=1 name="quantity" min=1 max="{{ prod[4] }}">
             </td>
             <td>
-                <input type="hidden" name="pid" value="{{ prod[0] }}">
-                  <input type="submit" name="buy" value="Buy">
-                </form>
+              <input type="hidden" name="pid" value="{{ prod[0] }}">
+              <input type="submit" name="buy" value="Buy">
             </td>
+          </form>
           {% endfor %}
         </tr>
       </table>

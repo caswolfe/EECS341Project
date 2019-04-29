@@ -88,8 +88,15 @@ def home():
             quant = str(request.form['quantity'])
             sql = "update product set name ='{name}',price = '{price}',quantity = '{quant}' where pid = '{pid}'".format(name=name,price=price,quant=quant,pid=pid)
             sql_execute(sql)
-            print(pid,name,price,quant)
+            #print(pid,name,price,quant)
             pid = 0
+        if "delete" in result:
+            print("TIEM FOR DELETE")
+            to_del = request.form.getlist('check')
+            print(to_del)
+            for pid in to_del:
+                sql = "delete from product where product.pid = '{pid}'".format(pid=pid)
+                sql_execute(sql)
 
     uname = session['uname']
     sql = "select u.uid from user u where u.username = '{uname}'".format(uname=uname)
@@ -101,7 +108,6 @@ def home():
     result = sql_query(sql)
     ret = []
     #need to return true if update button is pushed
-
     if pid:
         #print("test")
         for i in result:
@@ -114,9 +120,7 @@ def home():
     else:
         ret = result
 
-    print(ret)
-
-
+    #print(ret)
     #we can pass data to html by giving something to the template_data arg
     #from html, we can run embedded python by using {{*embedded python code*}}
     #we can then access whatever data we store in the arguement we passed
@@ -127,13 +131,18 @@ def home():
 @app.route('/shop', methods=['GET', 'POST'])
 def shop():
     #when the user clicks the buy button
-    if "buy" in request.form:
-        id = int(request.form["buy"])
-        print("product id: "+ str(id))
-        return redirect(url_for('purchase',pid = id)) #sends pid to request.args
+    if request.method == 'POST':
+        print("post recieved")
+        if "buy" in request.form:
+            print("Clicked buy")
+            id = request.form["pid"]
+            quant = request.form["quantity"]
+            print("quantity:" + str(quant))
+            print("product id: "+ str(id))
+            return redirect(url_for('purchase',pid = id,quant = quant )) #sends pid to request.args
 
     uname = session['uname'] #uses session to get username. Setup on the '/' page
-    print(uname)
+    #print(uname)
     #show all products that are not owned by the user
     sql = "select * from product p, user u where p.sellerid = u.uid and u.username <> '{uname}'".format(uname=uname)
     #python string.format operates similarily to printf() in C
@@ -160,21 +169,71 @@ def sell():
 
 @app.route('/purchase' ,methods=['GET', 'POST'])
 def purchase():
+    pid = request.args.get('pid') #passed from '/shop'
+    quant = request.args.get('quant')
+    if pid is None:
+        pid =session['pid']
+    if quant is None:
+        quant = session['quant']
+    sql = "select p.name, s.uid, p.price from product p, user s where p.pid = '{pid}' and s.uid = p.sellerid;".format(pid=pid)
+    pf = sql_query(sql)
+    name,side,price = pf[0]
+    total = float(price)*float(quant)
+
+    pf = [name,quant,total]
+    #print("got product info")
     if request.method == 'POST':
+        print("posted")
         #TODO:purchase logic
         #delete from user inventory?
         #update user balance?
         #quantity options?
-        return redirect(url_for('shop'))
+        uname=session['uname']
+        sql = "select u.uid from user u where u.username = '{uname}'".format(uname=uname)
+        uid = sql_query(sql)[0][0]
+        print("STORED PID = "+str(session['pid']))
+        newpid = session['pid']
 
-    pid = request.args.get('pid') #passed from '/shop'
-    print("pid is:" + str(pid))
-    #aquire particular info about the product
-    sql = "select p.name, s.name, p.price from product p, user s where p.pid = '{pid}' and s.uid = p.sellerid;".format(pid = str(pid))
-    product_info = sql_query(sql)
-    print("template_data:")
-    print(product_info)
-    return render_template('purchase.html', template_data = product_info)
+
+        #create transaction
+        sql = "select p.name, s.uid, p.price from product p, user s where p.pid = '{pid}' and s.uid = p.sellerid;".format(pid=newpid)
+        product_info = sql_query(sql)
+        name,sid,price = product_info[0]
+        #need quantity
+        squant = session['quant']
+        print(name,sid,price,squant)
+        sql = "insert into transaction (pid,sellerid,buyerid,quantity,ppunit) values('{newpid}','{sid}','{uid}','{quant}','{price}')".format(newpid=newpid,sid=sid,uid=uid,quant=squant,price=price)
+        sql_execute(sql)
+
+
+        #adjust user balanaces
+        #the current user
+        total = float(price)*float(squant)
+        print(total)
+        sql = "select u.balance from user u where u.uid = '{uid}'".format(uid=uid)
+        current_bal = sql_query(sql)[0][0]
+        new_bal = current_bal-total
+        print(new_bal)
+        sql = "update user set balance= '{new_bal}' where user.uid = '{uid}'".format(new_bal=new_bal,uid=uid)
+        sql_execute(sql)
+
+
+        #the seller
+        sql = "select u.balance from user u where u.uid = '{sid}'".format(sid=sid)
+        current_bal = sql_query(sql)[0][0]
+        new_bal = current_bal+total
+        print(new_bal)
+        sql = "update user set balance= '{new_bal}' where user.uid = '{sid}'".format(new_bal=new_bal,sid=sid)
+        sql_execute(sql)
+        return redirect(url_for('shop',pid=pid))
+    else:
+        session['pid'] = pid
+        session['quant'] = quant
+
+
+    #print("template_data:")
+    #print(product_info)
+    return render_template('purchase.html', template_data = pf)
 
 
 #what you see when you first login

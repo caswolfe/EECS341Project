@@ -1,0 +1,91 @@
+body {
+	background-color: #464866;
+}
+
+tbody {
+	background-color: white;
+}
+
+h1 {
+	color: #AAABB8;
+	font-family: Arial;
+	font-size: 60px;
+	line-height: 100px;
+	text-align: center;
+	vertical-align: middle;
+}
+
+#shop-btn {
+	height: 200px;
+	width: 95vw;
+	background-color: transparent;
+	font-family: Arial;
+	font-size: 60px;
+}
+
+.header {
+	color: #AAABB8; 
+	background-color: #25274D;
+	margin: auto;
+	height: 100px;
+	width: 95vw;
+}
+
+.title { 
+	margin: auto;
+	height: 100px;
+	width: 95vw;
+}
+
+.shop {
+	color: #AAABB8; 
+	background-color: #25274D;
+	margin: auto;
+	height: 200px;
+	width: 95vw;
+}
+
+.products {
+
+}
+
+.btn {
+    margin-right: 10px;
+    padding: 8px 15px;
+
+    color: white;
+    background-color: #5D5C61;
+
+    font-weight: bold;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+
+    border: none;
+    border-radius: 5px;
+}
+
+.btn:hover {
+    background-color: #379683;
+    cursor: pointer;
+}
+
+.table {
+    border: solid 1px #DDEEEE;
+    border-collapse: collapse;
+    border-spacing: 0;
+    font: normal 13px Arial, sans-serif;
+}
+.table thead th {
+    background-color: #DDEFEF;
+    border: solid 1px #DDEEEE;
+    color: #336B6B;
+    padding: 10px;
+    text-align: left;
+    text-shadow: 1px 1px 1px #fff;
+}
+.table tbody td {
+    border: solid 1px #DDEEEE;
+    color: #333;
+    padding: 10px;
+    text-shadow: 1px 1px 1px #fff;
+}

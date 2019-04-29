@@ -1,57 +1,76 @@
-<html>
-    <head>
-      <style>
-      table, th, td {
-        border: 1px solid black;
-        }
-</style>
-        <title>Jinourmous Jungle, the world's shittiest store.</title>
+<head>
+      <link rel="stylesheet" type="text/css" href="static/css/style.css">
+      <title>Home Page</title>
     </head>
     <body>
-        <p>Your user homepage</p>
+      <div class="header">
+        <pre>
+          __  _                                                     __                    _
+          \ \(_)_ __   ___  _   _ _ __ _ __ ___   ___  _   _ ___    \ \ _   _ _ __   __ _| | ___
+           \ \ | '_ \ / _ \| | | | '__| '_ ` _ \ / _ \| | | / __|    \ \ | | | '_ \ / _` | |/ _ \
+        /\_/ / | | | | (_) | |_| | |  | | | | | | (_) | |_| \__ \ /\_/ / |_| | | | | (_| | |  __/
+        \___/|_|_| |_|\___/ \__,_|_|  |_| |_| |_|\___/ \__,_|___/ \___/ \__,_|_| |_|\__, |_|\___|
+                                                                                    |___/
+        </pre>
+      </div>
+
+      <div class="title">
+        <h1>Your User Homepage:</h1>
+      </div>
+
+      <div class="shop btn">
         <form action = "/shop" method = "POST">
-          <input type = "submit" name = "Shop" value = "Shop">
+          <input id="shop-btn" class="btn" type = "submit" name = "Shop" value = "Shop">
         </form>
+      </div>
+
+      <div class="products">
         <p> Your products on the market</p>
-    <form action = "/home" method = "POST" id="delete"></form>
-    <table>
-      <tr>
-        <td> <b>Name</b></td>
-        <td> <b>Price (USD)</b></td>
-        <td> <b>Quantity</b></td>
-        <td> </td>
-        <td> <input type="submit" value="Delete" name="delete" form="delete"> </td>
+        <form action = "/home" method = "POST" id="delete"></form>
 
-      </tr>
-        {% for prod in template_data %}
-      <tr>
-        {% if prod[4] == True %}
-        <form action="/home" method = "POST" id="update_row">
-          <td> <input type="text" name="name" value="{{ prod[0] }}"> </td>
-          <td> <input type="text" name="price" value="{{ prod[1] }}"> </td>
-          <td> <input type="text" name="quantity" value="{{ prod[2] }}"> </td>
-          <input type="hidden" name = "pid" value = "{{ prod[3] }}">
-          <td> <input type="submit" name="submit" value="Submit"> </td>
-        </form>
-        <td> <input type="checkbox" name="{{ prod[3] }}" form="delete"> </td>
-        {% else %}
-          <td>{{ prod[0] }} </td>
-          <td>{{ prod[1] }} </td>
-          <td>{{ prod[2] }} </td>
-          <td>
-            <form action="/home" method="post">
-            <button name="update" value="{{prod[3]}}" id="{{prod[3]}}">Update</button>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Price (USD)</th>
+              <th>Quantity</th>
+              <th>Update</th>
+              <th> <input class="btn" type="submit" value="Delete" name="delete" form="delete"> </th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {% for prod in template_data %}
+            <tr>
+            {% if prod[4] == True %}
+            <form action="/home" method = "POST" id="update_row">
+              <td> <input type="text" name="name" value="{{ prod[0] }}"> </td>
+              <td> <input type="text" name="price" value="{{ prod[1] }}"> </td>
+              <td> <input type="text" name="quantity" value="{{ prod[2] }}"> </td>
+              <input type="hidden" name = "pid" value = "{{ prod[3] }}">
+              <td> <input type="submit" name="submit" value="Submit"> </td>
             </form>
-          </td>
-          <td> <input type="checkbox" name="{{ prod[3] }}" form="delete"> </td>
-        {% endif %}
+            <td> <input type="checkbox" name="{{ prod[3] }}" form="delete"> </td>
+            {% else %}
+            <td>{{ prod[0] }} </td>
+            <td>{{ prod[1] }} </td>
+            <td>{{ prod[2] }} </td>
+            <td>
+              <form action="/home" method="post">
+                <button name="update" value="{{prod[3]}}" id="{{prod[3]}}">Update</button>
+              </form>
+            </td>
+            <td> <input type="checkbox" name="check" value = "{{ prod[3] }}"form="delete"> </td>
+            {% endif %}
 
-        {% endfor %}
-    </tr>
-    </table>
-  <br>
-    <form action = "/sell" method = "POST">
-      <input type = "submit" name = "sell" value = "Add Item">
-    </form>
+            {% endfor %}
+            </tr>
+          </tbody>
+        </table>
+        <br>
+        <form action = "/sell" method = "POST">
+          <input type = "submit" name = "sell" value = "Add Item">
+        </form>
+      </div>
     </body>
 </html>
