@@ -42,7 +42,7 @@ def sql_execute(sql):
 @app.route('/createaccount')
 def createaccount():
     if request.method == 'POST':
-        pass #python for do nothing
+        #pass #python for do nothing
         #TODO create user in database, verify that user does not already exist
         sql = "select uid as id from user where user.username='{uname}'".format(uname=uname)
         sql_result = sql_query(sql)
@@ -90,6 +90,11 @@ def home():
             sql_execute(sql)
             #print(pid,name,price,quant)
             pid = 0
+
+
+        #we also need to look at this delete
+        #as it will fail if we try to delete something with a foregin key, in this case a previous transaction
+        #see in the purchase function
         if "delete" in result:
             print("TIEM FOR DELETE")
             to_del = request.form.getlist('check')
@@ -144,7 +149,7 @@ def shop():
     uname = session['uname'] #uses session to get username. Setup on the '/' page
     #print(uname)
     #show all products that are not owned by the user
-    sql = "select * from product p, user u where p.sellerid = u.uid and u.username <> '{uname}'".format(uname=uname)
+    sql = "select * from product p, user u where p.sellerid = u.uid and u.username <> '{uname}' and p.quantity>0".format(uname=uname)
     #python string.format operates similarily to printf() in C
     template_data = sql_query(sql)
     return render_template('shop.html',template_data = template_data)
@@ -201,10 +206,37 @@ def purchase():
         name,sid,price = product_info[0]
         #need quantity
         squant = session['quant']
+
         print(name,sid,price,squant)
         sql = "insert into transaction (pid,sellerid,buyerid,quantity,ppunit) values('{newpid}','{sid}','{uid}','{quant}','{price}')".format(newpid=newpid,sid=sid,uid=uid,quant=squant,price=price)
         sql_execute(sql)
 
+
+        #reduce seller amount of goods
+        sql = "select p.quantity from product p where p.pid = '{pid}'".format(pid=newpid)
+        original_quantity = int(sql_query(sql)[0][0])
+        new_quantity = original_quantity-int(squant)
+        print("newquantiy = " + str(new_quantity))
+
+###########################################################################################################
+        #design: we never delete products, as they are refrenced in transaction
+        #instead, the SQL query that displays products in the shop just doesn't display
+        #products with quantity > 0
+        #this could be good or bad. It is helpful to see if the store has ever carried
+        #a product, and leaves open the possibility of restocking
+        #this could be bad in the case that a product is removed and never dealt with again
+
+        #an additional option is to set the foregin key NULL on delete (set during CREATE TABLE)
+        #I also like this, as it enables a search for products we no longer carry by looking for NULL
+
+
+        # if new_quantity < 1:
+        #     sql= "delete from product where product.pid = '{pid}'".format(pid=newpid)
+        #     sql_execute(sql)
+        # else:
+################################################################################################################
+        sql = "update product set quantity = '{new_quantity}' where product.pid = '{pid}'".format(new_quantity=new_quantity,pid=newpid)
+        sql_execute(sql)
 
         #adjust user balanaces
         #the current user
