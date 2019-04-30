@@ -4,28 +4,25 @@
     </head>
     <body>
       <div class="header">
-        <pre>
-          __  _                                                     __                    _
-          \ \(_)_ __   ___  _   _ _ __ _ __ ___   ___  _   _ ___    \ \ _   _ _ __   __ _| | ___
-           \ \ | '_ \ / _ \| | | | '__| '_ ` _ \ / _ \| | | / __|    \ \ | | | '_ \ / _` | |/ _ \
-        /\_/ / | | | | (_) | |_| | |  | | | | | | (_) | |_| \__ \ /\_/ / |_| | | | | (_| | |  __/
-        \___/|_|_| |_|\___/ \__,_|_|  |_| |_| |_|\___/ \__,_|___/ \___/ \__,_|_| |_|\__, |_|\___|
-                                                                                    |___/
-        </pre>
+        
       </div>
 
       <div class="title">
         <h1>Your User Homepage:</h1>
       </div>
 
-      <a href = "/shop" class="shop">
-      <div class="shop btn">
-        <h2>Shop</h2>
-      </div>
+      <a href = "/shop">
+        <div class="shop btn">
+          <h2 >Shop</h2>
+        </div>
       </a>
-    
+
       <div class="products">
         <p> Your products on the market</p>
+        <br>
+        <form action = "/sell" method = "POST">
+          <input type = "submit" name = "sell" value = "Add Item">
+        </form>
         <form action = "/home" method = "POST" id="delete"></form>
 
         <table class="table">
@@ -67,10 +64,6 @@
             </tr>
           </tbody>
         </table>
-        <br>
-        <form action = "/sell" method = "POST">
-          <input type = "submit" name = "sell" value = "Add Item">
-        </form>
       </div>
     </body>
 </html>
