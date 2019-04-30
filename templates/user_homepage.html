@@ -4,7 +4,7 @@
     </head>
     <body>
       <div class="header">
-        <img src="/static/css/Presentation22.jpg" alt="Logo">
+
       </div>
 
       <div class="title">
@@ -103,6 +103,7 @@
           </tr>
         </tbody>
       </table>
+        {% if template_data["aggregate_data"] %} <!-- add -->
         <br><br>
         <p>Your stats:</p>
         <p>Number of buying transactions:  {{template_data["aggregate_data"][0]}} </p>
@@ -112,6 +113,7 @@
         <p>Number of selling transactions:  {{template_data["aggregate_data"][3]}} </p>
         <p>Number of items sold:  {{template_data["aggregate_data"][4]}} </p>
         <p>Value of items sold:  ${{template_data["aggregate_data"][5]}} </p>
+        {% end if %} <!-- add -->
 
         <br>
         <br>

@@ -4,16 +4,16 @@
         <title>Create Account</title>
     </head>
     <body>
-      <a href="/">
-        <div class="header">
-          <img src="/static/css/Presentation22.jpg" alt="Logo">
-        </div>
-      </a>
-      
+      <div class="header">
+        <img src="/static/css/Presentation22.jpg" alt="Logo">
+      </div>
+
       <div class="account">
         <h1>Please create an account below:</h1>
-        <form action="/" method="POST">
+        <form action="/createaccount" method="POST">
           <div class="info">
+            <h3>Name: <br>
+            <input type="name" name = "name"></h3>
             <h3>Username:<br>
             <input type="text" name="username"></h3>
             <h3>Email:<br>
@@ -25,6 +25,7 @@
             <input class="btn login" type="submit" value="Submit">
           </div>
         </form>
+        <p> {{template_data}} </p>
       </div>
     </body>
 </html>
