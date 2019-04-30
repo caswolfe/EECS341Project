@@ -115,19 +115,19 @@ def home():
     #TODO: we need to add some form of balance or way of keeping track amount spent, gained
     #another attribute in the user table? Or some other way?
     result = sql_query(sql)
-    ret = []
+    template_data = []
     #need to return true if update button is pushed
     if pid:
         #print("test")
         for i in result:
             if i[3] == pid:
                 j = i + (True,)
-                ret.append(j)
+                template_data.append(j)
             else:
                 j = i + (False,)
-                ret.append(j)
+                template_data.append(j)
     else:
-        ret = result
+        template_data = result
 
 
     #now do transactions
@@ -162,7 +162,9 @@ def home():
     #from html, we can run embedded python by using {{*embedded python code*}}
     #we can then access whatever data we store in the arguement we passed
     #typically, we pass data as a list or dict, which are analogous to vectors/arraylists and hashmaps, respectivily
-    return render_template('user_homepage.html', template_data = ret, aggregate_data=aggregate_data,transactions = transactions)
+    template_data_2 = {"template_data":template_data, "aggregate_data":aggregate_data, "trasactions":transactions}
+    print(template_data_2)
+    return render_template('user_homepage.html', template_data = template_data_2)#, aggregate_data=aggregate_data,transactions = transactions)
 
 #the basic shop page
 @app.route('/shop', methods=['GET', 'POST'])
