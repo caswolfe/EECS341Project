@@ -1,5 +1,5 @@
 body {
-	background-color: #464866;
+	background-color: #356273;
 }
 
 tbody {
@@ -10,14 +10,48 @@ a {
 	text-decoration: none;
 }
 
+.error {
+	color: #FF0000;
+	text-align: center;
+	margin-top: -10px;
+}
+
 .header {
-	color: #AAABB8; 
-	background-image: url("Presentation22.jpg");
-	background-size: 100% 100%;
-	margin: none;
+	background-color: #B8E3F2;
 	position: relative;
-	align-self: center;
-	height: 300px;
+	height: 200px;
+	text-align: center;
+}
+
+.header img {
+	height: 200px;
+}
+
+.account {
+	background-color: #B8E3F2;
+
+	position: relative;
+	width: 400px;
+	left: 50%;
+	transform: translateX(-50%);
+
+	border-radius: 5px;
+}
+
+.account h1 {
+	position: relative;
+	text-align: center;
+	color: #576B73;
+	font-family: Arial;
+	font-size: 30px;
+}
+
+.info {
+	position: relative;
+	color: #576B73;
+	font-family: Arial;
+	font-size: 18px;
+	text-align: center;
 }
 
 .title {
@@ -31,7 +65,7 @@ a {
 .title h1 {
 	position: relative;
 	
-	color: #AAABB8;
+	color: #576B73;
 	font-family: Arial;
 	font-size: 60px;
 
@@ -62,10 +96,27 @@ a {
 
 .btn {
     color: white;
-    background-color: #5D5C61;
+    background-color: #576B73;
+
+    margin-right: 10px;
+    margin-bottom: 5px;
+    padding: 8px 15px;
+
+	color: white;
+	font-family: Arial;
+	font-weight: bold;
+	font-size: 14px;
+
 
     border: none;
     border-radius: 5px;
+
+
+}
+
+.btn.login:hover {
+	cursor: pointer;
+	background-color: #91B3BF;
 }
 
 .btn:hover {

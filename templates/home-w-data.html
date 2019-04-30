@@ -5,25 +5,22 @@
     </head>
     <body>
       <div class="header">
-        <pre>
-          __  _                                                     __                    _
-          \ \(_)_ __   ___  _   _ _ __ _ __ ___   ___  _   _ ___    \ \ _   _ _ __   __ _| | ___
-           \ \ | '_ \ / _ \| | | | '__| '_ ` _ \ / _ \| | | / __|    \ \ | | | '_ \ / _` | |/ _ \
-        /\_/ / | | | | (_) | |_| | |  | | | | | | (_) | |_| \__ \ /\_/ / |_| | | | | (_| | |  __/
-        \___/|_|_| |_|\___/ \__,_|_|  |_| |_| |_|\___/ \__,_|___/ \___/ \__,_|_| |_|\__, |_|\___|
-                                                                                    |___/
-        </pre>
+        <img src="/static/css/Presentation22.jpg" alt="Logo">
       </div>
 
-      <p>Please login below</p>
-      <form action = "/" method = "POST">
-        <p>Username: <br>
-        <input type="text" name="username"></p>
-        <p>Password:<br>
-        <input type="password" name="password"></p>
-        <input type = "submit" name = "Login" value = "Login">
-        <input type = "submit" name = "Create_Account" value = "Create_Account">
-      </form>
-      <p> {{ template_data }}</p>
+      <div class="account">
+        <h1>Please login below:</h1>
+        <form action="/" method="POST">
+          <div class="info">  
+            <h3>Username:<br>
+            <input type="text" name="username"></h3>
+            <h3>Password:<br>
+            <input type="password" name="password"></h3>
+            <input class="btn login" type="submit" name="Login" value="Login">
+            <input class="btn login"type="submit" name="Create_Account" value="Create Account">
+          </div>
+        </form>
+        <p class="error"> {{ template_data }}</p>
+    </div>
     </body>
 </html>
