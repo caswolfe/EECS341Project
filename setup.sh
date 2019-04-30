@@ -18,7 +18,9 @@ pip install mysql-connector
 
 echo
 echo "creating config.ini"
-template << TMPLT
+
+FILE="config.ini"
+/bin/cat <<EOM >$FILE
 [app]
 debug = True
 host = 127.3.4.1
@@ -29,10 +31,7 @@ host = eecslab-9
 user = team_12
 passwd = 50ab6263
 database = team_12
-EOF
-TMPLT
-
-template > "config.ini"
+EOM
 
 echo
 echo "finished?"
