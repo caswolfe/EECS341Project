@@ -4,7 +4,7 @@
     </head>
     <body>
       <div class="header">
-        
+
       </div>
 
       <div class="title">
@@ -65,5 +65,56 @@
           </tbody>
         </table>
       </div>
+      <p>Andrew Szabo is a bitch</p><br><br>
+      <p>Recent purchases:</p>
+      {% if transactions %}
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Price per unit</th>
+            <th>Quantity</th>
+            <th>Total Price</th>
+            <th>Time</th>
+            <th>Delete</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {% for trans in transactions %}
+          <tr>
+          <td>{{ prod[1] }} </td>
+          <td>{{ prod[2] }} </td>
+          <td>{{ prod[3] }} </td>
+          <td>{{ prod[4] }} </td>
+          <td>{{ prod[5] }} </td>
+          <td>
+            <form action="/home" method="POST">
+              <button name="delete_recent" value="{{ prod[0] }}" id="{{ prod[0] }}">Delete</button>
+            </form>
+          </td>
+
+          {% endfor %} <!-- iterating through recent trasactions -->
+          <p>Note: Only transactions within the last 30 minutes are able to be deleted</p>
+          {% else %} <!-- if there are no recent transactions  -->
+          <p>No transactions in last 24 hours</p>
+          {% endif %}
+
+          </tr>
+        </tbody>
+      </table>
+        <br><br>
+        <p>Your stats:</p>
+        <p>Number of buying transactions:  {{aggregate_data[0]}} </p>
+        <p>Number of items bought:  {{aggregate_data[1]}} </p>
+        <p>Value of items bought:  {{aggregate_data[2]}} </p>
+        <br>
+        <p>Number of selling transactions:  {{aggregate_data[3]}} </p>
+        <p>Number of items sold:  {{aggregate_data[4]}} </p>
+        <p>Value of items sold:  {{aggregate_data[5]}} </p>
+
+        <br>
+        <br>
+        <br>
     </body>
 </html>
