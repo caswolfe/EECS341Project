@@ -1,6 +1,6 @@
 # EECS341Project
 
-<B><U>Final Class Project for EECS341 Intro to Databases</B></U>
+<B>Final Class Project for EECS341 Intro to Databases</B>
 Andrew Duffield, Ben Pierce, Andrew Szabo and Chad
 
 The database is hosted on the eecslab9 server, under the "team_12" database. It is intended for
