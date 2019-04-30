@@ -100,14 +100,16 @@ def home():
             to_del = request.form.getlist('check')
             print(to_del)
             for pid in to_del:
-                sql = "delete from product where product.pid = '{pid}'".format(pid=pid)
+                sql = "update product set quantity=-1 where product.pid = '{pid}'".format(pid=pid)
                 sql_execute(sql)
+                # sql = "delete from product where product.pid = '{pid}'".format(pid=pid)
+                # sql_execute(sql)
 
     uname = session['uname']
     sql = "select u.uid from user u where u.username = '{uname}'".format(uname=uname)
     uid = sql_query(sql)[0][0]
 
-    sql = "select distinct product.name, product.price, product.quantity, product.pid from user,product where user.uid = product.sellerid and user.uid = '{uid}';".format(uid=uid)
+    sql = "select distinct product.name, product.price, product.quantity, product.pid from user,product where user.uid = product.sellerid and user.uid = '{uid}' and product.quantity >=0;".format(uid=uid)
     #TODO: we need to add some form of balance or way of keeping track amount spent, gained
     #another attribute in the user table? Or some other way?
     result = sql_query(sql)
