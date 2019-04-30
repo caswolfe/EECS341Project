@@ -279,7 +279,6 @@ def template_response_with_data():
             uname = str(result['username']) #get data from the form, sent from the html <form> tag
             session['uname'] = uname #save the username to the session, for use when purchasing
             pswd = str(result['password'])
-
             #see if we have an existing user
             sql = "select uid as id from user where user.username='{uname}' and user.password='{pswd}'".format(uname=uname,pswd=pswd)
             sql_result = sql_query(sql)
