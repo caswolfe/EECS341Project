@@ -4,42 +4,47 @@
       <title>Marketplace</title>
     </head>
     <body>
-      <div class="header">
-        <pre>
-          __  _                                                     __                    _
-          \ \(_)_ __   ___  _   _ _ __ _ __ ___   ___  _   _ ___    \ \ _   _ _ __   __ _| | ___
-           \ \ | '_ \ / _ \| | | | '__| '_ ` _ \ / _ \| | | / __|    \ \ | | | '_ \ / _` | |/ _ \
-        /\_/ / | | | | (_) | |_| | |  | | | | | | (_) | |_| \__ \ /\_/ / |_| | | | | (_| | |  __/
-        \___/|_|_| |_|\___/ \__,_|_|  |_| |_| |_|\___/ \__,_|___/ \___/ \__,_|_| |_|\__, |_|\___|
-                                                                                    |___/
-        </pre>
-      </div>
+      <a href="/home">
+        <div class="header">
+          <img src="/static/css/Presentation22.jpg" alt="Logo">
+        </div>
+      </a>
       
-      <h1>Marketplace</h1>
-      <p>The items below are for sale</p>
-      <table>
-        <tr>
-          <td> <b>Name</b></td>
-          <td> <b>Price (USD)</b></td>
-          <td> <b>Purchase Quantity</b></td>
-          <td> <b>Buy</b></td>
-        </tr>
-        {% for prod in template_data %}
-        <tr>
-          <td>{{ prod[2] }} </td>
-          <td>{{ prod[3] }} </td>
+      <div class="title">
+        <h1>Marketplace</h1>
+        <h2>The items below are for sale</h2>
+      </div>
+
+      <div class="products">
+        <table class="table">
+          <thead>
+          <tr>
+            <th>Name</th>
+            <th>Price (USD)</th>
+            <th>Purchase Quantity</th>
+            <th>Buy</th>
+          </tr>
+          </thead>
+
+          <tbody>
+            {% for prod in template_data %}
+            <tr>
+              <td>{{ prod[2] }} </td>
+              <td>{{ prod[3] }} </td>
             
-          <form action="/shop" method="POST">
-            <td>
-              <input type="number" value=1 name="quantity" min=1 max="{{ prod[4] }}">
-            </td>
-            <td>
-              <input type="hidden" name="pid" value="{{ prod[0] }}">
-              <input type="submit" name="buy" value="Buy">
-            </td>
-          </form>
-          {% endfor %}
-        </tr>
-      </table>
+              <form action="/shop" method="POST">
+                <td>
+                  <input type="number" value=1 name="quantity" min=1 max="{{ prod[4] }}">
+                </td>
+                <td>
+                  <input type="hidden" name="pid" value="{{ prod[0] }}">
+                  <input class="btn login" type="submit" name="buy" value="Buy">
+                </td>
+              </form>
+            {% endfor %}
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </body>
 </html>
