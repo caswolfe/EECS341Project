@@ -1,6 +1,6 @@
 import configparser
 from flask import Flask, render_template, request, url_for, redirect, session
-from flask_table import Table, Col
+#from flask_table import Table, Col
 import mysql.connector
 
 # Read configuration from file.
@@ -68,6 +68,8 @@ def createaccount():
     return render_template('createaccount.html', template_data = template_data)
 
 
+
+
 #the user home. Lists their products, balance, etc
 @app.route('/home', methods=['GET', 'POST'])
 def home():
@@ -127,12 +129,40 @@ def home():
     else:
         ret = result
 
+
+    #now do transactions
+    sql = "select p.name, t.ppunit, t.quantity, t.ts, t.pid, now()  from transaction t, product p  where t.buyerid = '{bid}' and t.ts >= DATE_SUB(now(),INTERVAL 1 DAY) and p.pid = t.pid;".format(bid=uid)
+    result = sql_query(sql)
+    #print(result)
+    transactions = []
+    for tup in result:
+        name,ppunit,quant,ts,pid,rn = tup
+        total_price = float(ppunit) * float(quant)
+        transactions.append([pid,name,ppunit,quant,total_price,str(ts)])
+
+    #print(transactions)
+
+
+    #now do aggregates
+    aggregate_data = []
+    sql = "select count(distinct t.pid),sum(t.quantity),sum(t.ppunit*t.quantity) from transaction t where t.buyerid = '{pid}'".format(pid=uid)
+    buy_result = sql_query(sql)
+    sql = "select count(distinct t.pid),sum(t.quantity),sum(t.ppunit*t.quantity) from transaction t where t.sellerid = '{pid}'".format(pid=uid)
+    sell_result = sql_query(sql)
+
+    #print(result)
+    num_distinct_buy_t,quant_bought_b,total_spendings_b = buy_result[0]
+    num_distinct_sell_t,quant_bought_s,total_spendings_s = sell_result[0]
+    aggregate_data = [num_distinct_buy_t,int(quant_bought_b),format(total_spendings_b,'.2f'),num_distinct_sell_t,int(quant_bought_s),format(total_spendings_s,'.2f')]
+    print(aggregate_data)
+
+
     #print(ret)
     #we can pass data to html by giving something to the template_data arg
     #from html, we can run embedded python by using {{*embedded python code*}}
     #we can then access whatever data we store in the arguement we passed
     #typically, we pass data as a list or dict, which are analogous to vectors/arraylists and hashmaps, respectivily
-    return render_template('user_homepage.html', template_data = ret)
+    return render_template('user_homepage.html', template_data = ret, aggregate_data=aggregate_data,transactions = transactions)
 
 #the basic shop page
 @app.route('/shop', methods=['GET', 'POST'])
