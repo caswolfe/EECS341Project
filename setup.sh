@@ -19,6 +19,7 @@ pip install mysql-connector
 echo
 echo "creating config.ini"
 
+#creates the config file
 FILE="config.ini"
 /bin/cat <<EOM >$FILE
 [app]
@@ -34,4 +35,4 @@ database = team_12
 EOM
 
 echo
-echo "finished?"
+echo "finished"
