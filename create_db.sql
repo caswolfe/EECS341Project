@@ -1,4 +1,8 @@
 /*
+ * creates the necessary tables for the database
+ */
+
+/*
  * Select the database
  */
 use team_12;
@@ -40,13 +44,14 @@ CREATE TABLE product(
  * Transaction Table
  */
 CREATE TABLE transaction(
+	tid int(11) NOT NULL UNIQUE AUTO_INCREMENT,
 	pid int(11) NOT NULL,
 	sellerid int(11) NOT NULL,
 	buyerid int(11) NOT NULL,
 	ts TIMESTAMP,
 	quantity int(11) NOT NULL,
 	ppunit float NOT NULL,
-	PRIMARY KEY (pid, sellerid, buyerid, ts),
+	PRIMARY KEY (pid, sellerid, buyerid, tid),
 	FOREIGN KEY (pid) references product(pid),
 	FOREIGN KEY (sellerid) references user(uid),
 	FOREIGN KEY (buyerid) references user(uid)
@@ -127,4 +132,21 @@ INSERT INTO product (sellerid, name, price, quantity)
 /*
 INSERT INTO product (sellerid, name, price, quantity)
 	VALUES (, "", , );
+*/
+
+INSERT INTO transaction(pid, sellerid, buyerid, quantity, ppunit)
+	VALUES (1, 1, 2, 1, 1.5);
+
+INSERT INTO transaction(pid, sellerid, buyerid, quantity, ppunit)
+	VALUES (5, 2, 1, 1, 2.5);
+
+INSERT INTO transaction(pid, sellerid, buyerid, quantity, ppunit)
+	VALUES (9, 3, 4, 3, 3.5);
+
+INSERT INTO transaction(pid, sellerid, buyerid, quantity, ppunit)
+	VALUES (16, 4, 3, 5, 4.5);
+
+/*
+INSERT INTO transaction(pid, sellerid, buyerid, quantity)
+	VALUES (, , , );
 */
