@@ -116,7 +116,7 @@ a {
 .products {
 	position: relative;
 	margin-top: -50px;
-	width: 650px;
+	width: 660px;
 	left: 50%;
 	transform: translateX(-50%);
 }
@@ -133,7 +133,6 @@ a {
 	font-family: Arial;
 	font-weight: bold;
 	font-size: 14px;
-
 
     border: none;
     border-radius: 5px;
