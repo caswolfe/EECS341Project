@@ -23,7 +23,7 @@ CREATE TABLE user(
 	password varchar(40) NOT NULL,
 	name varchar(255) NOT NULL,
 	email varchar(255) NOT NULL,
-	balance int(11) NOT NULL,
+	balance float NOT NULL,
 	PRIMARY KEY (uid)
 );
 
