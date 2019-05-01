@@ -34,7 +34,10 @@
             
               <form action="/shop" method="POST">
                 <td>
-                  <input type="number" value=1 name="quantity" min=1 max="{{ prod[4] }}">
+                  <div class="tooltip">
+                    <input type="number" value=1 name="quantity" min=1 max="{{ prod[4] }}">
+                    <span class="tooltiptext">Max Quantity: {{ prod[4] }}</span>
+                  </div>
                 </td>
                 <td>
                   <input type="hidden" name="pid" value="{{ prod[0] }}">

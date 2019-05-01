@@ -11,20 +11,20 @@
       </a>
         
       <div class="account">
-      <h1>Sell Page:</h1>
-      <p class="note">Add items that you wish to post for sale.</p>
-      <form action="/sell" method="POST">
-        <div class="info">
-        <h3>Item Name:<br>
-        <input type="text" name="Item Name"></h3>
-        <h3>Price (USD):<br>
-        <input type="text" name="Price(USD)"></h3>
-        <h3>Quantity:<br>
-        <input type="text" name="Quantity"></h3>
-        <input class="btn login" type="submit" name="add_item" value="Sell">
+        <h1>Sell Page:</h1>
+        <p class="note">Add items that you wish to post for sale.</p>
+        <form action="/sell" method="POST">
+          <div class="info">
+            <h3>Item Name:<br>
+            <input type="text" name="Item Name"></h3>
+            <h3>Price (USD):<br>
+            <input type="text" name="Price(USD)"></h3>
+            <h3>Quantity:<br>
+            <input type="text" name="Quantity"></h3>
+            <input class="btn login" type="submit" name="add_item" value="Sell">
+          </div>
+        </form>
+        <p class="error">{{ template_data }}</p>
       </div>
-      </form>
-      <p class="error">{{ template_data }}</p>
-      <div>
     </body>
 </html>

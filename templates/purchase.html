@@ -4,20 +4,24 @@
       <title>Purchase Page</title>
     </head>
     <body>
-      <div class="header">
-        <pre>
-          __  _                                                     __                    _
-          \ \(_)_ __   ___  _   _ _ __ _ __ ___   ___  _   _ ___    \ \ _   _ _ __   __ _| | ___
-           \ \ | '_ \ / _ \| | | | '__| '_ ` _ \ / _ \| | | / __|    \ \ | | | '_ \ / _` | |/ _ \
-        /\_/ / | | | | (_) | |_| | |  | | | | | | (_) | |_| \__ \ /\_/ / |_| | | | | (_| | |  __/
-        \___/|_|_| |_|\___/ \__,_|_|  |_| |_| |_|\___/ \__,_|___/ \___/ \__,_|_| |_|\__, |_|\___|
-                                                                                    |___/
-        </pre>
+      <a href="/home">
+        <div class="header">
+          <img src="/static/css/Presentation22.jpg" alt="Logo">
+        </div>
+      </a>
+
+      <div class="account">
+        <h1>Confirm:</h1>
+        <h2 class="note"> Confirm you would like to purchase <u>{{template_data[1]}} {{template_data[0]}}</u> for <u>{{ template_data[2] }}</u> dollars?</h2>
+        <form action="/purchase" method="post">
+          <div class="info">
+            <button class="btn" name="Confirm" value="Confirm">Confirm</button>
+            <a href="/shop">
+            <button class="btn" name="Cancel" value="Cancel">Cancel</button>
+            </a>
+          </div>
+        </form>
       </div>
 
-      <p> Confirm you would like to purchase {{template_data[1]}} {{template_data[0]}} for {{ template_data[2] }} dollars?</p>
-      <form action="/purchase" method="post">
-        <button name="Confirm" value="Confirm">Confirm</button>
-      </form>
     </body>
 </html>
