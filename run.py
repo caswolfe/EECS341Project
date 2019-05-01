@@ -209,7 +209,7 @@ def home():
     #print(ret)
     #we can pass data to html by giving something to the template_data arg
     #from html, we can run embedded python by using {{*embedded python code*}}
-    #we can then access whatever data we store in the arguement we passed
+    #we can then access whaftever data we store in the arguement we passed
     #typically, we pass data as a list or dict, which are analogous to vectors/arraylists and hashmaps, respectivily
     sql = "select u.balance from user u where u.uid = '{uid}'".format(uid=uid)
     res = sql_query(sql)[0][0]
@@ -281,6 +281,8 @@ def purchase():
     pf = [name,quant,total]
     #print("got product info")
     if request.method == 'POST':
+        if "Cancel" in request.form:
+            return redirect(url_for("shop"))
         print("posted")
         #TODO:purchase logic
         #delete from user inventory?
