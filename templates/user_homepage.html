@@ -39,7 +39,7 @@
               <p>Number of items bought:  <b style="color:#70D1F4;">{{template_data["aggregate_data"][1]}}</b> </p>
               <p>Value of items bought:  <b style="color:#70D1F4;">${{template_data["aggregate_data"][2]}}</b> </p>
             {% endif %}
-         
+
             {% if template_data["aggregate_data"][3] %}
             <h2>Selling:</h2>
               <p>Number of selling transactions:  <b style="color:#70D1F4;">{{template_data["aggregate_data"][3]}}</b> </p>
@@ -55,6 +55,7 @@
         </div>
 
         <div class="middle">
+          {% if template_data['template_data'] %}
           <table class="table">
             <thead>
               <tr>
@@ -94,6 +95,9 @@
               </tr>
             </tbody>
           </table>
+          {% else %}
+          <p>You have no products on sale</p>
+          {% endif %}
         </div>
 
         <div class="bottom">
@@ -148,6 +152,6 @@
             </tbody>
           </table>
         </div>
-      </div>      
+      </div>
     </body>
 </html>

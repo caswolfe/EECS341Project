@@ -42,11 +42,8 @@ def sql_execute(sql):
 @app.route('/createaccount', methods=['GET', 'POST'])
 def createaccount():
     template_data = ""
-    print("what")
     if request.method == 'POST':
-        print("posted")
         result = request.form
-        print(result)
         uname = result['username']
         name = result['name']
         email = result['email']
@@ -90,7 +87,6 @@ def home():
             return redirect(url_for('shop'))
         if "update" in result:
             pid = int(request.form['update'])
-            #print(pid)
         if "submit" in result:
             pid = int(request.form['pid'])
             name = str(request.form['name'])
@@ -98,7 +94,6 @@ def home():
             quant = str(request.form['quantity'])
             sql = "update product set name ='{name}',price = '{price}',quantity = '{quant}' where pid = '{pid}'".format(name=name,price=price,quant=quant,pid=pid)
             sql_execute(sql)
-            #print(pid,name,price,quant)
             pid = 0
 
 
@@ -106,9 +101,7 @@ def home():
         #as it will fail if we try to delete something with a foregin key, in this case a previous transaction
         #see in the purchase function
         if "delete" in result:
-            print("TIEM FOR DELETE")
             to_del = request.form.getlist('check')
-            print(to_del)
             for pid in to_del:
                 sql = "update product set quantity=-1 where product.pid = '{pid}'".format(pid=pid)
                 sql_execute(sql)
@@ -116,9 +109,7 @@ def home():
                 # sql_execute(sql)
 
         if "delete_recent" in result:
-            print("deleting Recent")
             to_del = request.form["delete_recent"]
-            print("transaction id = "+str(to_del))
             sql = "select t.pid, t.sellerid, t.buyerid, t.quantity, t.ppunit from transaction t where t.tid = '{tid}'".format(tid=to_del)
             t_info = sql_query(sql)
             pid,sellerid,buyerid,quant,ppunit = t_info[0]
@@ -140,7 +131,6 @@ def home():
             sql_execute(sql)
 
         if "add_balance" in result:
-            print("add bal")
             balance[1] = True
         if "add_balance_confirm" in result:
             bal = request.form["bal"]
@@ -156,7 +146,6 @@ def home():
     template_data = []
     #need to return true if update button is pushed
     if pid:
-        #print("test")
         for i in result:
             if i[3] == pid:
                 j = i + (True,)
@@ -171,14 +160,12 @@ def home():
     #now do transactions
     sql = "select t.tid,p.name,t.ppunit, t.quantity, t.ts, t.pid, now()  from transaction t, product p  where t.buyerid = '{bid}' and t.ts >= DATE_SUB(now(),INTERVAL 1 DAY) and p.pid = t.pid;".format(bid=uid)
     result = sql_query(sql)
-    #print(result)
     transactions = []
     for tup in result:
         tid,name,ppunit,quant,ts,pid,rn = tup
         total_price = float(ppunit) * float(quant)
         transactions.append([tid,name,ppunit,quant,total_price,str(ts)])
 
-    #print(transactions)
 
 
     #now do aggregates
@@ -188,7 +175,6 @@ def home():
     sql = "select count(distinct t.pid),sum(t.quantity),sum(t.ppunit*t.quantity) from transaction t where t.sellerid = '{pid}'".format(pid=uid)
     sell_result = sql_query(sql)
 
-    #print(result)
     num_distinct_buy_t,quant_bought_b,total_spendings_b = buy_result[0]
     num_distinct_sell_t,quant_bought_s,total_spendings_s = sell_result[0]
     if num_distinct_buy_t is None or quant_bought_b is None or total_spendings_b is None:
@@ -203,10 +189,8 @@ def home():
             aggregate_data = [num_distinct_buy_t,int(quant_bought_b),format(total_spendings_b,'.2f'),None,None,None]
         else:
             aggregate_data = [num_distinct_buy_t,int(quant_bought_b),format(total_spendings_b,'.2f'),num_distinct_sell_t,int(quant_bought_s),format(total_spendings_s,'.2f')]
-    print(aggregate_data)
 
 
-    #print(ret)
     #we can pass data to html by giving something to the template_data arg
     #from html, we can run embedded python by using {{*embedded python code*}}
     #we can then access whaftever data we store in the arguement we passed
@@ -216,7 +200,6 @@ def home():
     balance[0] = format(res, '.2f')
 
     template_data_2 = {"template_data":template_data, "aggregate_data":aggregate_data, "trasactions":transactions, "balance":balance}
-    print(template_data_2)
 
 
     return render_template('user_homepage.html', template_data = template_data_2)#, aggregate_data=aggregate_data,transactions = transactions)
@@ -226,17 +209,12 @@ def home():
 def shop():
     #when the user clicks the buy button
     if request.method == 'POST':
-        print("post recieved")
         if "buy" in request.form:
-            print("Clicked buy")
             id = request.form["pid"]
             quant = request.form["quantity"]
-            print("quantity:" + str(quant))
-            print("product id: "+ str(id))
             return redirect(url_for('purchase',pid = id,quant = quant )) #sends pid to request.args
 
     uname = session['uname'] #uses session to get username. Setup on the '/' page
-    #print(uname)
     #show all products that are not owned by the user
     sql = "select * from product p, user u where p.sellerid = u.uid and u.username <> '{uname}' and p.quantity>0".format(uname=uname)
     #python string.format operates similarily to printf() in C
@@ -279,11 +257,9 @@ def purchase():
     total = float(price)*float(quant)
 
     pf = [name,quant,total]
-    #print("got product info")
     if request.method == 'POST':
         if "Cancel" in request.form:
             return redirect(url_for("shop"))
-        print("posted")
         #TODO:purchase logic
         #delete from user inventory?
         #update user balance?
@@ -291,7 +267,6 @@ def purchase():
         uname=session['uname']
         sql = "select u.uid from user u where u.username = '{uname}'".format(uname=uname)
         uid = sql_query(sql)[0][0]
-        print("STORED PID = "+str(session['pid']))
         newpid = session['pid']
 
 
@@ -302,7 +277,6 @@ def purchase():
         #need quantity
         squant = session['quant']
 
-        print(name,sid,price,squant)
         sql = "insert into transaction (pid,sellerid,buyerid,quantity,ppunit) values('{newpid}','{sid}','{uid}','{quant}','{price}')".format(newpid=newpid,sid=sid,uid=uid,quant=squant,price=price)
         sql_execute(sql)
 
@@ -311,7 +285,6 @@ def purchase():
         sql = "select p.quantity from product p where p.pid = '{pid}'".format(pid=newpid)
         original_quantity = int(sql_query(sql)[0][0])
         new_quantity = original_quantity-int(squant)
-        print("newquantiy = " + str(new_quantity))
 
 ###########################################################################################################
         #design: we never delete products, as they are refrenced in transaction
@@ -336,11 +309,9 @@ def purchase():
         #adjust user balanaces
         #the current user
         total = float(price)*float(squant)
-        print(total)
         sql = "select u.balance from user u where u.uid = '{uid}'".format(uid=uid)
         current_bal = sql_query(sql)[0][0]
         new_bal = current_bal-total
-        print(new_bal)
         sql = "update user set balance= '{new_bal}' where user.uid = '{uid}'".format(new_bal=new_bal,uid=uid)
         sql_execute(sql)
 
@@ -349,7 +320,6 @@ def purchase():
         sql = "select u.balance from user u where u.uid = '{sid}'".format(sid=sid)
         current_bal = sql_query(sql)[0][0]
         new_bal = current_bal+total
-        print(new_bal)
         sql = "update user set balance= '{new_bal}' where user.uid = '{sid}'".format(new_bal=new_bal,sid=sid)
         sql_execute(sql)
         return redirect(url_for('shop',pid=pid))
@@ -358,8 +328,6 @@ def purchase():
         session['quant'] = quant
 
 
-    #print("template_data:")
-    #print(product_info)
     return render_template('purchase.html', template_data = pf)
 
 
@@ -369,7 +337,6 @@ def template_response_with_data():
     template_data = ""
     if request.method == 'POST': #if the user has clicked a button
         result = request.form
-        print(result)
         if "Login" in result: #if the user clicked the "login" button
             uname = str(result['username']) #get data from the form, sent from the html <form> tag
             session['uname'] = uname #save the username to the session, for use when purchasing
