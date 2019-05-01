@@ -65,7 +65,7 @@
           </tbody>
         </table>
       </div>
-      <p>Andrew Szabo is a bitch</p><br><br>
+      <br><br>
       <p>Recent purchases:</p>
       {% if template_data["trasactions"] %}
       <table class="table">
@@ -76,7 +76,7 @@
             <th>Quantity</th>
             <th>Total Price</th>
             <th>Time</th>
-            <th>Delete</th>
+            <th>Cancel</th>
           </tr>
         </thead>
 
@@ -90,12 +90,12 @@
           <td>{{ trans[5] }} </td>
           <td>
             <form action="/home" method="POST">
-              <button name="delete_recent" value="{{ trans[0] }}" id="{{ trans[0] }}">Delete</button>
+              <button name="delete_recent" value="{{ trans[0] }}" id="{{ trans[0] }}">Cancel</button>
             </form>
           </td>
 
           {% endfor %} <!-- iterating through recent trasactions -->
-          <p>Note: Only transactions within the last 30 minutes are able to be deleted</p>
+          <p>Note: Only transactions within the last 24 hours are able to be cancelled</p>
           {% else %} <!-- if there are no recent transactions  -->
           <p>No transactions in last 24 hours</p>
           {% endif %}
@@ -103,17 +103,33 @@
           </tr>
         </tbody>
       </table>
-        {% if template_data["aggregate_data"] %} <!-- add -->
+
+      <p>Your balance: ${{template_data["balance"][0]}}</p>
+        {% if template_data["balance"][1] %}
+        <form action="/home" method="POST">
+          <input type="number" name="bal" step="0.01">
+          <button name="add_balance_confirm">Add</button>
+        </form>
+        {% else %}
+        <form action="/home" method="POST">
+          <button name="add_balance">Add Balance</button>
+        </form>
+        {% endif %}
+
+
+        {% if template_data["aggregate_data"][0] %} <!-- add -->
         <br><br>
         <p>Your stats:</p>
         <p>Number of buying transactions:  {{template_data["aggregate_data"][0]}} </p>
         <p>Number of items bought:  {{template_data["aggregate_data"][1]}} </p>
         <p>Value of items bought:  ${{template_data["aggregate_data"][2]}} </p>
         <br>
+        {% endif %}
+        {% if template_data["aggregate_data"][3] %}
         <p>Number of selling transactions:  {{template_data["aggregate_data"][3]}} </p>
         <p>Number of items sold:  {{template_data["aggregate_data"][4]}} </p>
         <p>Value of items sold:  ${{template_data["aggregate_data"][5]}} </p>
-        {% end if %} <!-- add -->
+        {% endif %} <!-- add -->
 
         <br>
         <br>

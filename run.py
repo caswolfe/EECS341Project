@@ -39,33 +39,36 @@ def sql_execute(sql):
 
 
 #TODO
-@app.route('/createaccount')
+@app.route('/createaccount', methods=['GET', 'POST'])
 def createaccount():
+    template_data = ""
+    print("what")
     if request.method == 'POST':
-        #pass #python for do nothing
-        #TODO create user in database, verify that user does not already exist
+        print("posted")
+        result = request.form
+        print(result)
+        uname = result['username']
+        name = result['name']
+        email = result['email']
+        pw1 = result['password1']
+        pw2 = result['password2']
+        if (pw1 != pw2):
+            return render_template('createaccount.html',template_data = "Your passwords do not match!")
+        if uname is "" or name is "" or email is "" or pw1 is "" or pw2 is "":
+            return render_template('createaccount.html',template_data = "Please fill out all fields!")
+
         sql = "select uid as id from user where user.username='{uname}'".format(uname=uname)
         sql_result = sql_query(sql)
 
-        #if query returns empty set, can create account
         if not sql_result:
-            print("add the user")
-            n_username =    str(result['username'])
-            n_password =    str(result['password'])
-            n_name =        str(result['name'])
-            n_email =       str(result['email'])
+            insert = "insert into user (username,password,name,email,balance) values ('{uname}','{pw}','{name}','{eml}','{balance}');".format(uname=uname,pw=pw1,name = name,eml = email, balance = 0)
 
-            insert_command = "INSERT INTO user (username, password, name, email) VALUES ({uname}, {pswd}, {nm}, {eml})".format(uname=n_username, pswd=n_password, nm=n_name, eml=n_email)
-            sql_execute(insert_command)
-            return redirect(url_for('home'))
-
-        #we've got a user that matches username, can't create account
+            sql_execute(insert)
+            return redirect(url_for('template_response_with_data'))
         else:
-            template_data="Username allready in use,pPlease try again"
-            return render_template('createaccount.html', template_data = template_data) #sends us back to the start
+            return render_template('createaccount.html',template_data = "User already exists!")
 
-    template_data = ""
-    return render_template('createaccount.html', template_data = template_data)
+    return render_template('createaccount.html',template_data = template_data)
 
 
 
@@ -74,8 +77,13 @@ def createaccount():
 @app.route('/home', methods=['GET', 'POST'])
 def home():
     pid = 0
+    uname = session['uname']
+    sql = "select u.uid from user u where u.username = '{uname}'".format(uname=uname)
+    uid = sql_query(sql)[0][0]
+    balance = [0,False]
     if request.method == 'POST':
         result = request.form
+
         if "sell" in result:
             return redirect(url_for('sell'))
         if "Shop" in result:
@@ -107,9 +115,39 @@ def home():
                 # sql = "delete from product where product.pid = '{pid}'".format(pid=pid)
                 # sql_execute(sql)
 
-    uname = session['uname']
-    sql = "select u.uid from user u where u.username = '{uname}'".format(uname=uname)
-    uid = sql_query(sql)[0][0]
+        if "delete_recent" in result:
+            print("deleting Recent")
+            to_del = request.form["delete_recent"]
+            print("transaction id = "+str(to_del))
+            sql = "select t.pid, t.sellerid, t.buyerid, t.quantity, t.ppunit from transaction t where t.tid = '{tid}'".format(tid=to_del)
+            t_info = sql_query(sql)
+            pid,sellerid,buyerid,quant,ppunit = t_info[0]
+
+            #refunds
+            refund = float(quant)*float(ppunit)
+            sql = "update user set balance = balance + '{refund}' where user.uid = '{uid}'".format(refund = refund, uid=buyerid)
+            sql_execute(sql)
+
+            sql = "update user set balance = balance - '{refund}' where user.uid = '{uid}'".format(refund = refund, uid=sellerid)
+            sql_execute(sql)
+
+            #redistribute quantites
+            sql = "update product set quantity = quantity + '{quant}' where product.pid = '{pid}'".format(quant = quant, pid=pid)
+            sql_execute(sql)
+
+            #delete the transaction
+            sql = "delete from transaction where transaction.tid = '{tid}'".format(tid=to_del)
+            sql_execute(sql)
+
+        if "add_balance" in result:
+            print("add bal")
+            balance[1] = True
+        if "add_balance_confirm" in result:
+            bal = request.form["bal"]
+            sql = "update user set balance = balance + '{bal}' where user.uid= '{uid}'".format(bal=bal,uid=uid)
+            sql_execute(sql)
+            balance[1] = False
+
 
     sql = "select distinct product.name, product.price, product.quantity, product.pid from user,product where user.uid = product.sellerid and user.uid = '{uid}' and product.quantity >=0;".format(uid=uid)
     #TODO: we need to add some form of balance or way of keeping track amount spent, gained
@@ -131,14 +169,14 @@ def home():
 
 
     #now do transactions
-    sql = "select p.name, t.ppunit, t.quantity, t.ts, t.pid, now()  from transaction t, product p  where t.buyerid = '{bid}' and t.ts >= DATE_SUB(now(),INTERVAL 1 DAY) and p.pid = t.pid;".format(bid=uid)
+    sql = "select t.tid,p.name,t.ppunit, t.quantity, t.ts, t.pid, now()  from transaction t, product p  where t.buyerid = '{bid}' and t.ts >= DATE_SUB(now(),INTERVAL 1 DAY) and p.pid = t.pid;".format(bid=uid)
     result = sql_query(sql)
     #print(result)
     transactions = []
     for tup in result:
-        name,ppunit,quant,ts,pid,rn = tup
+        tid,name,ppunit,quant,ts,pid,rn = tup
         total_price = float(ppunit) * float(quant)
-        transactions.append([pid,name,ppunit,quant,total_price,str(ts)])
+        transactions.append([tid,name,ppunit,quant,total_price,str(ts)])
 
     #print(transactions)
 
@@ -153,7 +191,18 @@ def home():
     #print(result)
     num_distinct_buy_t,quant_bought_b,total_spendings_b = buy_result[0]
     num_distinct_sell_t,quant_bought_s,total_spendings_s = sell_result[0]
-    aggregate_data = [num_distinct_buy_t,int(quant_bought_b),format(total_spendings_b,'.2f'),num_distinct_sell_t,int(quant_bought_s),format(total_spendings_s,'.2f')]
+    if num_distinct_buy_t is None or quant_bought_b is None or total_spendings_b is None:
+        if num_distinct_sell_t is None or quant_bought_s is None or total_spendings_s is None:
+            aggregate_data = [None,None,None,None,None,None]
+        else:
+            # sell data only
+            aggregate_data = [None,None,None,num_distinct_sell_t,int(quant_bought_s),format(total_spendings_s,'.2f')]
+    else:
+        if num_distinct_sell_t is None or quant_bought_s is None or total_spendings_s is None:
+            # buy data only
+            aggregate_data = [num_distinct_buy_t,int(quant_bought_b),format(total_spendings_b,'.2f'),None,None,None]
+        else:
+            aggregate_data = [num_distinct_buy_t,int(quant_bought_b),format(total_spendings_b,'.2f'),num_distinct_sell_t,int(quant_bought_s),format(total_spendings_s,'.2f')]
     print(aggregate_data)
 
 
@@ -162,8 +211,14 @@ def home():
     #from html, we can run embedded python by using {{*embedded python code*}}
     #we can then access whatever data we store in the arguement we passed
     #typically, we pass data as a list or dict, which are analogous to vectors/arraylists and hashmaps, respectivily
-    template_data_2 = {"template_data":template_data, "aggregate_data":aggregate_data, "trasactions":transactions}
+    sql = "select u.balance from user u where u.uid = '{uid}'".format(uid=uid)
+    res = sql_query(sql)[0][0]
+    balance[0] = format(res, '.2f')
+
+    template_data_2 = {"template_data":template_data, "aggregate_data":aggregate_data, "trasactions":transactions, "balance":balance}
     print(template_data_2)
+
+
     return render_template('user_homepage.html', template_data = template_data_2)#, aggregate_data=aggregate_data,transactions = transactions)
 
 #the basic shop page
@@ -186,6 +241,8 @@ def shop():
     sql = "select * from product p, user u where p.sellerid = u.uid and u.username <> '{uname}' and p.quantity>0".format(uname=uname)
     #python string.format operates similarily to printf() in C
     template_data = sql_query(sql)
+
+
     return render_template('shop.html',template_data = template_data)
 
 
@@ -197,6 +254,8 @@ def sell():
             name = request.form['Item Name']
             price = request.form['Price(USD)']
             quantity = request.form['Quantity']
+            if name is None or price is None or quantity is None:
+                return render_template('sell.html',template_data = "Please enter all values")
             uname = session['uname']
             sql = "select u.uid from user u where u.username = '{uname}'".format(uname=uname)
             uid = sql_query(sql)[0][0]
@@ -322,7 +381,7 @@ def template_response_with_data():
             else: #we've got a user that matches username, password
                 return redirect(url_for('home'))
         elif "Create_Account" in result:
-            return redirect(url_for('createaccount')) #send us to the homepage
+            return redirect(url_for('createaccount'))
     return render_template('home-w-data.html', template_data = template_data)
 
 
