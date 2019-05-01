@@ -29,7 +29,6 @@ a {
 
 .header:hover {
 	cursor: pointer;
-
 }
 
 .account {
@@ -41,6 +40,7 @@ a {
 	transform: translateX(-50%);
 
 	border-radius: 5px;
+	margin-bottom: -10px;
 }
 
 .account h1 {
@@ -49,11 +49,6 @@ a {
 	color: #576B73;
 	font-family: Arial;
 	font-size: 30px;
-}
-
-#button1, #button2 {
-	vertical-align: top;
-	display: inline-block;
 }
 
 .note {
@@ -98,27 +93,87 @@ a {
 }
 
 .shop {
-	margin: -50px 0px -30px 0px;
+	margin-top: -70px;
 	position: relative;
-	align-self: center;
 	height: 200px;
-}
-
-.shop h2 {
-	font-family: Arial;
-	font-size: 80px;
-	position: relative;
-	text-align: center;
 	top: 50%;
-	transform: translateY(-50%);
 }
 
-.products {
+.shop h1 {
+	font-size: 70px;
+	text-align: center;
+	margin-top: 55px;
+}
+
+.store {
 	position: relative;
 	margin-top: -50px;
-	width: 660px;
+	width: 500px;
 	left: 50%;
 	transform: translateX(-50%);
+}
+
+.balance {
+	color: #2E505C;
+	font-family: Arial;
+	font-size: 30px;
+	text-align: center;
+}
+
+.data {
+	color: #2E505C;
+	font-family: Arial;
+	font-size: 20px;
+	text-align: center;
+	margin-top: -10px;
+}
+
+.stock {
+	position: absolute;
+	background-color: #5492A8;
+	width: 49%;
+	border-radius: 5px;
+	float: left;
+	margin-bottom: 5px;
+}
+
+.transactions {
+	position: absolute;
+	background-color: #5492A8;
+	width: 49%;
+	left: 50%;
+	border-radius: 5px;
+	float: right;
+	margin-bottom: 5px;
+}
+
+.top {
+	position: relative;
+	color: #2E505C;
+	font-family: Arial;
+	font-size: 20px;
+
+	margin-left:20px;
+	margin-bottom:-20px;
+}
+
+.middle {
+	position: relative;
+	margin: 20px;
+
+	color: #2E505C;
+	font-family: Arial;
+	font-size: 20px;
+}
+
+.bottom {
+	position: relative;
+	margin-top: 20px;
+	margin-bottom: -10px;
+}
+
+.bottom input {
+	margin-left: 30px;
 }
 
 .btn {
@@ -204,4 +259,25 @@ a {
 .tooltip:hover .tooltiptext {
   	visibility: visible;
   	opacity: 1;
+}
+
+#container {
+    width: 300px;
+    background-color: #ffcc33;
+    margin: auto;
+}
+#first {
+    width: 100px;
+    float: left;
+    height: 300px;
+    background-color: blue;
+}
+#second {
+    width: 200px;
+    float: left;
+    height: 300px;
+    background-color: green;
+}
+#clear {
+    clear: both;
 }

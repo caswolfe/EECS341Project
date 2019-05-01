@@ -4,7 +4,7 @@
     </head>
     <body>
       <div class="header">
-
+        <img src="/static/css/Presentation22.jpg" alt="Logo">
       </div>
 
       <div class="title">
@@ -12,127 +12,142 @@
       </div>
 
       <a href = "/shop">
-        <div class="shop btn">
-          <h2 >Shop</h2>
-        </div>
+        <div class="shop btn"><h1>Shop</h1></div>
       </a>
 
-      <div class="products">
-        <p> Your products on the market</p>
-        <br>
-        <form action = "/sell" method = "POST">
-          <input type = "submit" name = "sell" value = "Add Item">
-        </form>
-        <form action = "/home" method = "POST" id="delete"></form>
+      <div class="account" style="background-color: #5492A8;">
+        <h1>Your stats:</h1>
 
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Price (USD)</th>
-              <th>Quantity</th>
-              <th>Update</th>
-              <th> <input class="btn" type="submit" value="Delete" name="delete" form="delete"> </th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {% for prod in template_data['template_data'] %}
-            <tr>
-            {% if prod[4] == True %}
-            <form action="/home" method = "POST" id="update_row">
-              <td> <input type="text" name="name" value="{{ prod[0] }}"> </td>
-              <td> <input type="text" name="price" value="{{ prod[1] }}"> </td>
-              <td> <input type="text" name="quantity" value="{{ prod[2] }}"> </td>
-              <input type="hidden" name = "pid" value = "{{ prod[3] }}">
-              <td> <input type="submit" name="submit" value="Submit"> </td>
-            </form>
-            <td> <input type="checkbox" name="{{ prod[3] }}" form="delete"> </td>
-            {% else %}
-            <td>{{ prod[0] }} </td>
-            <td>{{ prod[1] }} </td>
-            <td>{{ prod[2] }} </td>
-            <td>
-              <form action="/home" method="post">
-                <button name="update" value="{{ prod[3] }}" id="{{ prod[3] }}">Update</button>
-              </form>
-            </td>
-            <td> <input type="checkbox" name="check" value = "{{ prod[3] }}"form="delete"> </td>
-            {% endif %}
-
-            {% endfor %}
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <br><br>
-      <p>Recent purchases:</p>
-      {% if template_data["trasactions"] %}
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Price per unit</th>
-            <th>Quantity</th>
-            <th>Total Price</th>
-            <th>Time</th>
-            <th>Cancel</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          {% for trans in template_data["trasactions"] %}
-          <tr>
-          <td>{{ trans[1] }} </td>
-          <td>{{ trans[2] }} </td>
-          <td>{{ trans[3] }} </td>
-          <td>{{ trans[4] }} </td>
-          <td>{{ trans[5] }} </td>
-          <td>
-            <form action="/home" method="POST">
-              <button name="delete_recent" value="{{ trans[0] }}" id="{{ trans[0] }}">Cancel</button>
-            </form>
-          </td>
-
-          {% endfor %} <!-- iterating through recent trasactions -->
-          <p>Note: Only transactions within the last 24 hours are able to be cancelled</p>
-          {% else %} <!-- if there are no recent transactions  -->
-          <p>No transactions in last 24 hours</p>
+        <div class="balance">
+          <p style="margin-bottom: -3px;">Your balance: <b style="color:#70D1F4;">${{template_data["balance"][0]}}</b></p>
+          {% if template_data["balance"][1] %}
+          <form action="/home" method="POST">
+            <input style="width:100px;" type="number" name="bal" step="0.01">
+            <button class="btn" name="add_balance_confirm">Add</button>
+          </form>
+          {% else %}
+          <form action="/home" method="POST">
+            <button class="btn" name="add_balance">Add Balance</button>
+          </form>
           {% endif %}
+        </div>
 
-          </tr>
-        </tbody>
-      </table>
+        <div class="data">
+          {% if template_data["aggregate_data"][0] %} <!-- add -->
+            <h2>Buying:</h2>
+              <p>Number of buying transactions:  <b style="color:#70D1F4;">{{template_data["aggregate_data"][0]}}</b> </p>
+              <p>Number of items bought:  <b style="color:#70D1F4;">{{template_data["aggregate_data"][1]}}</b> </p>
+              <p>Value of items bought:  <b style="color:#70D1F4;">${{template_data["aggregate_data"][2]}}</b> </p>
+            {% endif %}
+         
+            {% if template_data["aggregate_data"][3] %}
+            <h2>Selling:</h2>
+              <p>Number of selling transactions:  <b style="color:#70D1F4;">{{template_data["aggregate_data"][3]}}</b> </p>
+              <p>Number of items sold:  <b style="color:#70D1F4;">{{template_data["aggregate_data"][4]}}</b> </p>
+              <p>Value of items sold:  <b style="color:#70D1F4;">${{template_data["aggregate_data"][5]}}</b> </p>
+            {% endif %} <!-- add -->
+        </div>
+      </div>
 
-      <p>Your balance: ${{template_data["balance"][0]}}</p>
-        {% if template_data["balance"][1] %}
-        <form action="/home" method="POST">
-          <input type="number" name="bal" step="0.01">
-          <button name="add_balance_confirm">Add</button>
-        </form>
-        {% else %}
-        <form action="/home" method="POST">
-          <button name="add_balance">Add Balance</button>
-        </form>
-        {% endif %}
+      <div class="stock">
+        <div class="top">
+          <h1>Your Products:</h1>
+        </div>
 
+        <div class="middle">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Price (USD)</th>
+                <th>Quantity</th>
+                <th>Update</th>
+                <th> <input class="btn" type="submit" value="Delete" name="delete" form="delete"> </th>
+              </tr>
+            </thead>
 
-        {% if template_data["aggregate_data"][0] %} <!-- add -->
-        <br><br>
-        <p>Your stats:</p>
-        <p>Number of buying transactions:  {{template_data["aggregate_data"][0]}} </p>
-        <p>Number of items bought:  {{template_data["aggregate_data"][1]}} </p>
-        <p>Value of items bought:  ${{template_data["aggregate_data"][2]}} </p>
-        <br>
-        {% endif %}
-        {% if template_data["aggregate_data"][3] %}
-        <p>Number of selling transactions:  {{template_data["aggregate_data"][3]}} </p>
-        <p>Number of items sold:  {{template_data["aggregate_data"][4]}} </p>
-        <p>Value of items sold:  ${{template_data["aggregate_data"][5]}} </p>
-        {% endif %} <!-- add -->
+            <tbody>
+              {% for prod in template_data['template_data'] %}
+              <tr>
+              {% if prod[4] == True %}
+              <form action="/home" method = "POST" id="update_row">
+                <td> <input style="width: 125px;" type="text" name="name" value="{{ prod[0] }}"> </td>
+                <td> <input style="width: 50px;" type="text" name="price" value="{{ prod[1] }}"> </td>
+                <td> <input style="width: 50px;" type="text" name="quantity" value="{{ prod[2] }}"> </td>
+                <input type="hidden" name = "pid" value = "{{ prod[3] }}">
+                <td> <input class="btn" type="submit" name="submit" value="Submit"> </td>
+              </form>
+              <td> <input type="checkbox" name="{{ prod[3] }}" form="delete"> </td>
+              {% else %}
+              <td>{{ prod[0] }} </td>
+              <td>{{ prod[1] }} </td>
+              <td>{{ prod[2] }} </td>
+              <td>
+                <form action="/home" method="post">
+                  <button class="btn" name="update" value="{{ prod[3] }}" id="{{ prod[3] }}">Update</button>
+                </form>
+              </td>
+              <td> <input type="checkbox" name="check" value = "{{ prod[3] }}"form="delete"> </td>
+              {% endif %}
 
-        <br>
-        <br>
-        <br>
+              {% endfor %}
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="bottom">
+          <form action = "/sell" method = "POST">
+            <input class="btn" type = "submit" name = "sell" value = "Add Item">
+          </form>
+        </div>
+      </div>
+
+      <div class="transactions">
+        <div class="top">
+          <h1>Recent Purchases:</h1>
+        </div>
+
+        <div class="middle">
+          {% if template_data["trasactions"] %}
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Price per unit</th>
+                <th>Quantity</th>
+                <th>Total Price</th>
+                <th>Time</th>
+                <th>Cancel</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {% for trans in template_data["trasactions"] %}
+              <tr>
+              <td>{{ trans[1] }} </td>
+              <td>{{ trans[2] }} </td>
+              <td>{{ trans[3] }} </td>
+              <td>{{ trans[4] }} </td>
+              <td>{{ trans[5] }} </td>
+              <td>
+                <form action="/home" method="POST">
+                  <button name="delete_recent" value="{{ trans[0] }}" id="{{ trans[0] }}">Cancel</button>
+                </form>
+              </td>
+
+              {% endfor %} <!-- iterating through recent trasactions -->
+              <div class="bottom">
+                <p>Note: Only transactions within the last 24 hours are able to be cancelled</p>
+                {% else %} <!-- if there are no recent transactions  -->
+                <p>No transactions in last 24 hours</p>
+                {% endif %}
+              </div>
+
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>      
     </body>
 </html>
