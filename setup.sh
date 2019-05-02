@@ -2,7 +2,7 @@
 
 #Setup
 
-echo "you must have python and pip installed..."
+echo "you must have python and MySQL installed..."
 
 echo
 echo "settting up virtual environment"
