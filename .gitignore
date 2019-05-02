@@ -1,2 +1,3 @@
 #ignore the config file
-config.ini
+/config.ini
+/env/
